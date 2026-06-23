@@ -1,0 +1,374 @@
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e8f0f5 0%, #d4e4f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+}
+
+.language-selector {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.lang-button:hover {
+  background: #f5f5f5;
+  border-color: #999;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px 28px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.logo-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.iris-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.logo-image {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-tagline {
+  font-size: 0.85rem;
+  color: #4e9f3d;
+  font-weight: 500;
+  margin: 0;
+}
+
+.welcome-section {
+  text-align: center;
+}
+
+.welcome-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e5f8b;
+  margin: 0 0 8px 0;
+}
+
+.service-description {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.microsoft-button {
+  background: linear-gradient(135deg, #1e5f8b 0%, #2d7ab8 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(30, 95, 139, 0.3);
+}
+
+.microsoft-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 95, 139, 0.4);
+}
+
+.microsoft-button:active {
+  transform: translateY(0);
+}
+
+.password-button {
+  background: white;
+  color: #4e9f3d;
+  border: 2px solid #4e9f3d;
+  box-shadow: 0 2px 8px rgba(78, 159, 61, 0.15);
+}
+
+.password-button:hover {
+  background: #f0f9f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(78, 159, 61, 0.25);
+}
+
+.password-button:active {
+  transform: translateY(0);
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.separator-line {
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.separator-text {
+  font-size: 0.9rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.guest-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.guest-option:hover {
+  color: #1e5f8b;
+  background: #f5f9ff;
+  border-radius: 8px;
+}
+
+.features-section {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+  gap: 12px;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.feature-icon.fast-processing {
+  background: rgba(78, 159, 61, 0.1);
+  color: #4e9f3d;
+}
+
+.feature-icon.secure {
+  background: rgba(30, 95, 139, 0.1);
+  color: #1e5f8b;
+}
+
+.feature-icon.ai-powered {
+  background: rgba(30, 95, 139, 0.1);
+  color: #1e5f8b;
+}
+
+.feature-text {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;
+}
+
+/* Password Login Modal */
+.password-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.password-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.password-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.password-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e5f8b;
+  margin: 0;
+}
+
+.password-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.password-modal-close:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.password-form-group {
+  margin-bottom: 16px;
+}
+
+.password-form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.password-form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.password-form-input:focus {
+  outline: none;
+  border-color: #1e5f8b;
+}
+
+.password-form-error {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.password-form-submit {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #1e5f8b 0%, #2d7ab8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.password-form-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 95, 139, 0.3);
+}
+
+.password-form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .login-card {
+    padding: 24px 20px;
+  }
+
+  .welcome-title {
+    font-size: 1.1rem;
+  }
+
+  .logo-image {
+    height: 45px;
+  }
+
+  .features-section {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
