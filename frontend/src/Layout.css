@@ -17,10 +17,7 @@
   top: 0;
   z-index: 100;
   transition: width 0.3s ease;
-<<<<<<< HEAD
-=======
   overflow: hidden;
->>>>>>> dev
 }
 
 .sidebar.collapsed {
@@ -28,11 +25,7 @@
 }
 
 .sidebar-header {
-<<<<<<< HEAD
-  padding: 18.5px 12px;
-=======
   padding: 20px 12px;
->>>>>>> dev
   border-bottom: 1px solid #e0e0e0;
   background: white;
   display: flex;
@@ -41,11 +34,8 @@
   position: relative;
   flex-direction: column;
   gap: 12px;
-<<<<<<< HEAD
-=======
   min-height: 70px;
   box-sizing: border-box;
->>>>>>> dev
 }
 
 .sidebar-header::after {
@@ -60,14 +50,9 @@
 }
 
 .sidebar.collapsed .sidebar-header {
-<<<<<<< HEAD
-  padding: 16px 4px;
-  gap: 12px;
-=======
   padding: 20px 4px;
   gap: 12px;
   min-height: 70px;
->>>>>>> dev
 }
 
 .sidebar.collapsed .sidebar-header::after {
@@ -150,10 +135,90 @@
 
 .sidebar-nav {
   flex: 1;
-  padding: 16px 0;
+  padding: 12px 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.agent-nav-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.agent-section-header:hover {
+  background: #ebebeb;
+}
+
+.active-agent-section .agent-section-header {
+  color: #1e5f8b;
+}
+
+.agent-section-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: #666;
+}
+
+.agent-section-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.agent-section-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-section-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 4px;
+}
+
+.nav-item-nested {
+  padding-left: 36px;
+  font-size: 0.9rem;
+}
+
+.sidebar.collapsed .agent-section-title {
+  display: none;
+}
+
+.sidebar.collapsed .agent-section-header {
+  justify-content: center;
+  padding: 10px 12px;
+}
+
+.sidebar.collapsed .nav-item-nested {
+  padding-left: 12px;
+  justify-content: center;
+}
+
+.sidebar-standalone-nav {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
 }
 
 .nav-item {
@@ -216,11 +281,7 @@
 .top-header {
   background: white;
   border-bottom: 1px solid #e0e0e0;
-<<<<<<< HEAD
-  padding: 25.5px 32px;
-=======
   padding: 16px 28px;
->>>>>>> dev
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -228,11 +289,8 @@
   top: 0;
   z-index: 50;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-<<<<<<< HEAD
-=======
   min-height: auto;
   box-sizing: border-box;
->>>>>>> dev
 }
 
 .header-left {
@@ -249,18 +307,6 @@
 }
 
 .header-logo-main {
-<<<<<<< HEAD
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1e5f8b;
-  line-height: 1.2;
-}
-
-.header-logo-sub {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 500;
-=======
   font-size: 1.50rem;
   font-weight: 700;
   color: #1e5f8b;
@@ -287,7 +333,6 @@
   margin-top: 2px;
   letter-spacing: 0.2px;
   opacity: 0.85;
->>>>>>> dev
 }
 
 .header-right {

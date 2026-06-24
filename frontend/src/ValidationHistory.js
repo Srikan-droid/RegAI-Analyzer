@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-import React, { useMemo, useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import './ValidationHistory.css';
-import { formatDisplayDate } from './data/disclosures';
-import { useDisclosures } from './context/DisclosuresContext';
-=======
 import React, { useMemo, useState, useEffect, useCallback, startTransition } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import './ValidationHistory.css';
 import { formatDisplayDate, formatDisplayDateTime } from './data/disclosures';
 import { useDisclosures } from './context/DisclosuresContext';
 import apiService from './services/api';
->>>>>>> dev
 
 function ValidationHistory() {
   const { disclosures } = useDisclosures();
@@ -26,22 +18,11 @@ function ValidationHistory() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-<<<<<<< HEAD
-  const pageSize = 10;
-  const requestIds = useMemo(() => {
-    const map = {};
-    disclosures.forEach((item) => {
-      map[item.id] = item.fileStatus !== 'Pending' ? generateRequestId() : null;
-    });
-    return map;
-  }, [disclosures]);
-=======
   const [paginatedDisclosures, setPaginatedDisclosures] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState(new Set()); // Track selected items by unique key
   const pageSize = 10;
->>>>>>> dev
 
   // Read scoreFilter from URL query params on mount and when URL changes
   useEffect(() => {
@@ -53,68 +34,6 @@ function ValidationHistory() {
     }
   }, [searchParams]);
 
-<<<<<<< HEAD
-  const filteredHistory = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
-
-    const isWithinRange = (dateStr, from, to) => {
-      if (!dateStr) return false;
-      const date = new Date(dateStr);
-      const fromDate = from ? new Date(from) : null;
-      const toDateValue = to ? new Date(to) : null;
-      if (fromDate && date < fromDate) return false;
-      if (toDateValue && date > toDateValue) return false;
-      return true;
-    };
-
-    const matchesScore = (score) => {
-      if (scoreFilter === 'all') return true;
-      if (scoreFilter === 'no-score') return score == null;
-      if (score == null) return false;
-      if (scoreFilter === '80-plus') return score >= 80;
-      if (scoreFilter === '50-79') return score >= 50 && score < 80;
-      if (scoreFilter === 'below-50') return score < 50;
-      return true;
-    };
-
-    return disclosures.filter((item) => {
-      if (statusFilter !== 'all' && item.fileStatus !== statusFilter) {
-        return false;
-      }
-
-      if (!matchesScore(item.complianceScore)) {
-        return false;
-      }
-
-      if ((eventDateFrom || eventDateTo) && !isWithinRange(item.dateOfEvent, eventDateFrom, eventDateTo)) {
-        return false;
-      }
-
-      if (
-        (uploadedDateFrom || uploadedDateTo) &&
-        !isWithinRange(item.uploadedDate, uploadedDateFrom, uploadedDateTo)
-      ) {
-        return false;
-      }
-
-      if (term) {
-        const haystack = [
-          item.announcementTitle,
-          item.fileName,
-          item.regulations.join(' '),
-        ]
-          .join(' ')
-          .toLowerCase();
-
-        if (!haystack.includes(term)) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }, [disclosures, statusFilter, scoreFilter, eventDateFrom, eventDateTo, uploadedDateFrom, uploadedDateTo, searchTerm]);
-=======
   // Load paginated documents from backend
   const loadDocuments = useCallback(async (isPolling = false) => {
     // CRITICAL FIX: Don't set loading state during polling to prevent blinking
@@ -316,7 +235,6 @@ function ValidationHistory() {
       clearInterval(intervalId);
     };
   }, [paginatedDisclosures, loadDocuments]);
->>>>>>> dev
 
   const handleResetFilters = () => {
     setStatusFilter('all');
@@ -331,15 +249,6 @@ function ValidationHistory() {
     setSearchParams({});
   };
 
-<<<<<<< HEAD
-  const totalPages = Math.max(1, Math.ceil(filteredHistory.length / pageSize));
-  const currentPageData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return filteredHistory.slice(start, start + pageSize);
-  }, [filteredHistory, currentPage]);
-
-=======
->>>>>>> dev
   const handlePageChange = (direction) => {
     setCurrentPage((prev) => {
       if (direction === 'prev') {
@@ -357,8 +266,6 @@ function ValidationHistory() {
       <h1 className="validation-history-title">Validation History</h1>
 
       <div className="filters-header">
-<<<<<<< HEAD
-=======
         {/* EXPORT JSON and EXCEL Buttons - Only show when JSE entries are selected */}
         {selectedItems.size > 0 && (() => {
           const selectedJSEItems = paginatedDisclosures.filter(item => {
@@ -432,7 +339,6 @@ function ValidationHistory() {
           return null;
         })()}
         
->>>>>>> dev
         <button
           className="toggle-filters-btn"
           onClick={() => setFiltersVisible((prev) => !prev)}
@@ -448,19 +354,11 @@ function ValidationHistory() {
             <label>Status</label>
             <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="all">All Statuses</option>
-<<<<<<< HEAD
-              <option value="Pending">Pending</option>
-              <option value="Processing">Processing</option>
-              <option value="Completed">Completed</option>
-              <option value="Error">Error</option>
-              <option value="Cancelled">Cancelled</option>
-=======
               <option value="PENDING">Pending</option>
               <option value="PROCESSING">Processing</option>
               <option value="COMPLETED">Completed</option>
               <option value="ERROR">Error</option>
               <option value="CANCELLED">Cancelled</option>
->>>>>>> dev
             </select>
           </div>
 
@@ -536,81 +434,6 @@ function ValidationHistory() {
           </div>
         </div>
       )}
-<<<<<<< HEAD
-      
-      <div className="validation-table-container">
-        <table className="validation-table">
-          <thead>
-            <tr>
-              <th>Announcement Title</th>
-              <th>Date of Event</th>
-              <th>Regulations</th>
-              <th>Request ID</th>
-              <th>Status</th>
-              <th>Compliance Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentPageData.map((item) => {
-              const isClickable = item.fileStatus === 'Completed';
-              // Generate dummy data if missing
-              const displayTitle = item.announcementTitle || `Disclosure - ${item.fileName?.replace('.pdf', '') || 'Document'}`;
-              const displayDate = item.dateOfEvent || new Date().toISOString().split('T')[0];
-              return (
-                <tr key={item.id}>
-                  <td>
-                    <div className="announcement-cell">
-                      <button
-                        className={`disclosure-link ${!isClickable ? 'disabled' : ''}`}
-                        onClick={() =>
-                          isClickable && navigate(`/validation/${item.id}`, { state: { from: 'validation' } })
-                        }
-                        disabled={!isClickable}
-                      >
-                        {displayTitle}
-                      </button>
-                      <button
-                        type="button"
-                        className="info-tooltip"
-                        aria-label={`File name ${item.fileName || 'not available'}, uploaded ${item.uploadedDate ? formatDisplayDate(item.uploadedDate) : 'date not available'}`}
-                        data-tooltip={`File: ${item.fileName || 'Not available'} • Uploaded: ${item.uploadedDate ? formatDisplayDate(item.uploadedDate) : 'Not available'}`}
-                      >
-                        i
-                      </button>
-                    </div>
-                  </td>
-                  <td>{formatDisplayDate(displayDate)}</td>
-                  <td>
-                    {item.regulations.map((reg) => (
-                      <span key={`${item.id}-${reg}`} className="regulation-tag">
-                        {reg}
-                      </span>
-                    ))}
-                  </td>
-                  <td>{requestIds[item.id] || '-'}</td>
-                  <td>
-                    <span className={`status-badge ${getStatusClass(item.fileStatus)}`}>
-                      {item.fileStatus}
-                    </span>
-                  </td>
-                  <td>
-                    {item.fileStatus === 'Completed' && item.complianceScore != null ? (
-                      <span className="compliance-score">
-                        <span
-                          className={`score-indicator ${getScoreIndicatorClass(item.complianceScore)}`}
-                        />
-                        {item.complianceScore}%
-                      </span>
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-=======
 
       <div className="validation-table-container">
         {loading ? (
@@ -754,7 +577,6 @@ function ValidationHistory() {
             </tbody>
           </table>
         )}
->>>>>>> dev
       </div>
 
       <div className="pagination-bar">
@@ -782,18 +604,6 @@ function ValidationHistory() {
 }
 
 const getStatusClass = (status) => {
-<<<<<<< HEAD
-  switch (status) {
-    case 'Completed':
-      return 'status-completed';
-    case 'Processing':
-      return 'status-processing';
-    case 'Pending':
-      return 'status-pending';
-    case 'Error':
-      return 'status-error';
-    case 'Cancelled':
-=======
   const normalizedStatus = status || 'PROCESSING';
   switch (normalizedStatus) {
     case 'COMPLETED':
@@ -815,7 +625,6 @@ const getStatusClass = (status) => {
     case 'CANCELLED':
     case 'Cancelled':
     case 'cancelled':
->>>>>>> dev
       return 'status-cancelled';
     default:
       return '';
@@ -828,16 +637,5 @@ const getScoreIndicatorClass = (score) => {
   return 'score-poor';
 };
 
-<<<<<<< HEAD
-const generateRequestId = () => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
-  for (let i = 0; i < 8; i += 1) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return result;
-};
-=======
->>>>>>> dev
 
 export default ValidationHistory;

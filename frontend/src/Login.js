@@ -18,8 +18,6 @@ function Login({ onLogin }) {
   const [loading, setLoading] = useState(false);
   const [otpResendCount, setOtpResendCount] = useState(0);
   const [otpTimer, setOtpTimer] = useState(120); // 2 minutes in seconds
-<<<<<<< HEAD
-=======
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [resetOTPCode, setResetOTPCode] = useState('');
@@ -28,7 +26,6 @@ function Login({ onLogin }) {
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
   const [resetOtpTimer, setResetOtpTimer] = useState(120);
   const [showPassword, setShowPassword] = useState(false);
->>>>>>> dev
 
   // Handle Microsoft OAuth callback
   useEffect(() => {
@@ -44,7 +41,7 @@ function Login({ onLogin }) {
       setError('');
       const response = await apiService.microsoftLogin(code);
       onLogin(response.user);
-      navigate('/home');
+      navigate('/choose-agent');
     } catch (err) {
       setError(err.message || 'Microsoft login failed');
       setLoading(false);
@@ -63,26 +60,47 @@ function Login({ onLogin }) {
     }
   };
 
-  const handlePasswordLoginClick = () => {
-    setShowPasswordModal(true);
+  const handlePasswordLoginClick = async () => {
     setError('');
+
+    try {
+      setLoading(true);
+      // TODO: remove bypass for production — restore password modal + apiService.login
+      const mockUser = {
+        email: 'test@local.dev',
+        name: 'Test User',
+        is_email_verified: true,
+        auth_provider: 'password',
+      };
+      apiService.setToken('local-dev-token');
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      onLogin(mockUser);
+      navigate('/choose-agent');
+    } catch (err) {
+      setError(err.message || 'Login failed.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
-
     try {
       setLoading(true);
-      const response = await apiService.login(email, password);
+      // TODO: remove bypass for production — restore apiService.login(email, password)
+      const mockUser = {
+        email: email || 'test@local.dev',
+        name: 'Test User',
+        is_email_verified: true,
+        auth_provider: 'password',
+      };
+      apiService.setToken('local-dev-token');
+      localStorage.setItem('user', JSON.stringify(mockUser));
       setShowPasswordModal(false);
-      onLogin(response.user);
-      navigate('/home');
+      onLogin(mockUser);
+      navigate('/choose-agent');
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -123,7 +141,7 @@ function Login({ onLogin }) {
       setShowOTPModal(false);
       setShowOTPInput(false);
       onLogin(response.user);
-      navigate('/home');
+      navigate('/choose-agent');
     } catch (err) {
       setError(err.message || 'Guest login failed');
     } finally {
@@ -157,7 +175,7 @@ function Login({ onLogin }) {
       setShowOTPModal(false);
       setShowOTPInput(false);
       onLogin(response.user);
-      navigate('/home');
+      navigate('/choose-agent');
     } catch (err) {
       setError(err.message || 'OTP verification failed');
     } finally {
@@ -192,8 +210,6 @@ function Login({ onLogin }) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-<<<<<<< HEAD
-=======
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
     if (!forgotPasswordEmail) {
@@ -260,7 +276,6 @@ function Login({ onLogin }) {
     }
   };
 
->>>>>>> dev
   return (
     <div className="login-page">
       <div className="language-selector">
@@ -285,15 +300,9 @@ function Login({ onLogin }) {
         </div>
 
         <div className="welcome-section">
-<<<<<<< HEAD
-          <h1 className="welcome-title">Welcome to LODR AI Agent</h1>
-          <p className="service-description">
-            AI based automated compliance monitoring
-=======
           <h1 className="welcome-title">IRIS RegAI</h1>
           <p className="service-description">
             Smart, Regulatory AI engine for continuous monitoring and early warning system on non-compliance
->>>>>>> dev
           </p>
         </div>
 
@@ -311,18 +320,11 @@ function Login({ onLogin }) {
         )}
 
         <div className="login-options">
-<<<<<<< HEAD
-          <button 
-            className="login-button microsoft-button" 
-            onClick={handleMicrosoftLogin}
-            disabled={loading}
-=======
           {/* <button 
             className="login-button microsoft-button" 
             onClick={handleMicrosoftLogin}
             // disabled={loading}
             disabled={disabled}
->>>>>>> dev
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="2" y="4" width="20" height="16" rx="2"></rect>
@@ -330,10 +332,6 @@ function Login({ onLogin }) {
               <line x1="2" y1="12" x2="8" y2="12"></line>
             </svg>
             {loading ? 'Loading...' : 'Continue with Microsoft'}
-<<<<<<< HEAD
-          </button>
-
-=======
           </button> */}
 
           <button
@@ -349,7 +347,6 @@ function Login({ onLogin }) {
           </button>
 
 
->>>>>>> dev
           <button 
             className="login-button password-button" 
             onClick={handlePasswordLoginClick}
@@ -439,17 +436,6 @@ function Login({ onLogin }) {
               </div>
               <div className="password-form-group">
                 <label className="password-form-label">Password</label>
-<<<<<<< HEAD
-                <input
-                  type="password"
-                  className="password-form-input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  required
-                  disabled={loading}
-                />
-=======
                 <div style={{ position: 'relative' }}>
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -512,7 +498,6 @@ function Login({ onLogin }) {
                 >
                   Forgot Password?
                 </button>
->>>>>>> dev
               </div>
               {error && (
                 <div className="password-form-error">{error}</div>
@@ -683,8 +668,6 @@ function Login({ onLogin }) {
           </div>
         </div>
       )}
-<<<<<<< HEAD
-=======
 
       {/* Forgot Password Modal */}
       {showForgotPasswordModal && (
@@ -796,7 +779,6 @@ function Login({ onLogin }) {
           </div>
         </div>
       )}
->>>>>>> dev
     </div>
   );
 }

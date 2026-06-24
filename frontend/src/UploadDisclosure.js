@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './UploadDisclosure.css';
-import { useDisclosures } from './context/DisclosuresContext';
-
-const CHAT_HISTORY_KEY = 'ai_agent_chat_history';
-
-function UploadDisclosure() {
-  const navigate = useNavigate();
-  const { addDisclosure, disclosures } = useDisclosures();
-=======
 import React, { useState, useRef, useEffect, useCallback, startTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UploadDisclosure.css';
@@ -25,7 +13,6 @@ const CURRENT_DOCUMENT_KEY = 'ai_agent_current_document';
 function UploadDisclosure() {
   const navigate = useNavigate();
   const { addDisclosure, disclosures, startPollingForDocument } = useDisclosures();
->>>>>>> dev
   const [selectedFile, setSelectedFile] = useState(null);
   const [announcementTitle, setAnnouncementTitle] = useState('');
   const [dateOfEvent, setDateOfEvent] = useState('');
@@ -36,27 +23,6 @@ function UploadDisclosure() {
   const [showFormFields, setShowFormFields] = useState(false);
   const [isInteractMode, setIsInteractMode] = useState(false);
   const [questionInput, setQuestionInput] = useState('');
-<<<<<<< HEAD
-  // Initialize chatMessages from localStorage using lazy initialization
-  const [chatMessages, setChatMessages] = useState(() => {
-    try {
-      const storedHistory = localStorage.getItem(CHAT_HISTORY_KEY);
-      if (storedHistory) {
-        const parsedHistory = JSON.parse(storedHistory);
-        if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
-          return parsedHistory;
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load chat history on init', error);
-    }
-    return [];
-  });
-  const [disclosureId, setDisclosureId] = useState(null);
-  const [validationComplete, setValidationComplete] = useState(false);
-  const [progressMessageId, setProgressMessageId] = useState(null);
-  const scoreSetRef = useRef(false);
-=======
   const [chatMessages, setChatMessages] = useState([]);
   const [disclosureId, setDisclosureId] = useState(null);
   const [validationComplete, setValidationComplete] = useState(false);
@@ -86,34 +52,11 @@ function UploadDisclosure() {
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const scoreSetRef = useRef(false);
   const firstPdfNameRef = useRef(null); // Track the first PDF name for chat title
->>>>>>> dev
   const hasLoadedHistoryRef = useRef(true); // Set to true since we load via lazy init
   const isInitialMountRef = useRef(true);
   const fileInputRef = useRef(null);
   const chatContainerRef = useRef(null);
   const questionInputRef = useRef(null);
-<<<<<<< HEAD
-
-  // Restore state from chat history on mount
-  useEffect(() => {
-    if (chatMessages.length === 0) return;
-    
-    // Check if validation is complete
-    const hasValidationComplete = chatMessages.some(msg => 
-      msg.isProgress && 
-      msg.content && 
-      msg.content.includes('Validation completed successfully')
-    );
-    
-    if (hasValidationComplete) {
-      setValidationComplete(true);
-      // Try to extract disclosureId from messages
-      const progressMsg = chatMessages.find(msg => msg.isProgress && msg.viewReportPath);
-      if (progressMsg && progressMsg.viewReportPath) {
-        const match = progressMsg.viewReportPath.match(/\/validation\/(.+)/);
-        if (match) {
-          setDisclosureId(match[1]);
-=======
   const pollingIntervalRef = useRef(null);
   const chatHistorySidebarRef = useRef(null);
   const savedMessageIdsRef = useRef(new Set()); // Track which messages have been saved to backend
@@ -575,37 +518,10 @@ function UploadDisclosure() {
             refRebuiltCount++;
             console.log('[UploadDisclosure.restoreStateFromMessages] Rebuilt recentUploadsRef:', msgFileName, '->', docId);
           }
->>>>>>> dev
         }
       }
     }
     
-<<<<<<< HEAD
-    // Check if we're in interact mode (has user questions)
-    const hasUserQuestions = chatMessages.some(msg => msg.type === 'user');
-    if (hasUserQuestions && !hasValidationComplete) {
-      setIsInteractMode(true);
-    }
-  }, []); // Run only once on mount
-
-  // Persist chat history whenever it changes (skip initial mount to avoid overwriting)
-  useEffect(() => {
-    // Skip persistence on initial mount since we just loaded from localStorage
-    if (isInitialMountRef.current) {
-      isInitialMountRef.current = false;
-      return;
-    }
-    
-    // Only persist if we have messages (don't save empty arrays)
-    if (chatMessages.length > 0) {
-      try {
-        localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(chatMessages));
-      } catch (error) {
-        console.error('Failed to persist chat history', error);
-      }
-    }
-  }, [chatMessages]);
-=======
     console.log('[UploadDisclosure.restoreStateFromMessages] Mapping rebuild complete. Added', mappingRebuiltCount, 'new entries. Total mappings:', window.fileNameToDocumentIdMap.size);
     console.log('[UploadDisclosure.restoreStateFromMessages] RecentUploadsRef rebuild complete. Added', refRebuiltCount, 'new entries. Total ref entries:', recentUploadsRef.current.size);
 
@@ -1588,7 +1504,6 @@ function UploadDisclosure() {
       return () => clearTimeout(timer);
     }
   }, [chatMessages.length, isLoadingSession]);
->>>>>>> dev
 
   // Watch for compliance score updates - only run once when score becomes available
   useEffect(() => {
@@ -1602,25 +1517,6 @@ function UploadDisclosure() {
             if (msg.id === progressMessageId && msg.isProgress) {
               // Check if score is already in content
               const hasScoreInContent = msg.content && msg.content.includes('Compliance Score:');
-<<<<<<< HEAD
-              
-              // If score is already in content, don't do anything
-              if (hasScoreInContent) {
-                scoreSetRef.current = true;
-                return msg;
-              }
-              
-              // Only add score if it's not already there
-              // Append to existing content instead of rebuilding
-              const content = `${msg.content}\n    Compliance Score: ${complianceScore}%`;
-              scoreSetRef.current = true;
-              return {
-                ...msg,
-                content,
-                complianceScore,
-                viewReportPath: msg.viewReportPath || (disclosureId ? `/validation/${disclosureId}` : null),
-              };
-=======
               const hasViewReport = msg.content && msg.content.includes('View Report');
               
               // Format score to 2 decimal places
@@ -1673,7 +1569,6 @@ function UploadDisclosure() {
               }
               
               return msg;
->>>>>>> dev
             }
             return msg;
           });
@@ -1681,8 +1576,6 @@ function UploadDisclosure() {
       }
     }
   }, [disclosures, disclosureId, progressMessageId, validationComplete]);
-<<<<<<< HEAD
-=======
   
   // CRITICAL FIX: Ensure "Upload another PDF" message appears when validation is complete
   useEffect(() => {
@@ -1714,7 +1607,6 @@ function UploadDisclosure() {
       }
     }
   }, [validationComplete, chatMessages.length]);
->>>>>>> dev
 
   const progressSteps = [
     { name: 'OCR Extraction', id: 'ocr' },
@@ -1756,22 +1648,6 @@ function UploadDisclosure() {
     }
   };
 
-<<<<<<< HEAD
-  const handleFileSelect = (file) => {
-    const isPdf = file?.type === 'application/pdf' || file?.name?.toLowerCase().endsWith('.pdf');
-    if (isPdf) {
-      setSelectedFile(file);
-      setValidationComplete(false);
-      setDisclosureId(null);
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          type: 'system',
-          content: `File "${file.name}" uploaded successfully. What would you like to do?`,
-          timestamp: new Date(),
-        },
-      ]);
-=======
   const handleFileSelect = async (file) => {
     const isPdf = file?.type === 'application/pdf' || file?.name?.toLowerCase().endsWith('.pdf');
     if (isPdf) {
@@ -1836,31 +1712,11 @@ function UploadDisclosure() {
         await saveMessageToBackend('assistant', message.content);
       } else {
       }
->>>>>>> dev
     } else {
       alert('Please upload a PDF file.');
     }
   };
 
-<<<<<<< HEAD
-  const handleUploadAnotherPDF = () => {
-    setSelectedFile(null);
-    setValidationComplete(false);
-    setDisclosureId(null);
-    setShowFormFields(false);
-    setIsInteractMode(false);
-    setAnnouncementTitle('');
-    setDateOfEvent('');
-    // Keep chat history - just add a new message
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        type: 'system',
-        content: 'Please upload a new PDF document to continue.',
-        timestamp: new Date(),
-      },
-    ]);
-=======
   const handleUploadAnotherPDF = async () => {
     // Reset validation-related state for new PDF upload (but keep session)
     setSelectedFile(null);
@@ -1903,7 +1759,6 @@ function UploadDisclosure() {
       await saveMessageToBackend('assistant', message.content);
     }
     
->>>>>>> dev
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -1919,8 +1774,6 @@ function UploadDisclosure() {
     fileInputRef.current?.click();
   };
 
-<<<<<<< HEAD
-=======
   // Chat session handlers
   const handleCreateNewChat = async () => {
     // COMPLETELY reset all state for new chat
@@ -2184,7 +2037,6 @@ function UploadDisclosure() {
     }
   };
 
->>>>>>> dev
   const generateDummyAnswer = (question) => {
     const lowerQuestion = question.toLowerCase();
     const answers = [
@@ -2232,25 +2084,11 @@ function UploadDisclosure() {
     ]);
   };
 
-<<<<<<< HEAD
-  const handleQuestionSubmit = (e) => {
-=======
   const handleQuestionSubmit = async (e) => {
->>>>>>> dev
     e.preventDefault();
     if (!questionInput.trim()) return;
 
     const question = questionInput.trim();
-<<<<<<< HEAD
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        type: 'user',
-        content: question,
-        timestamp: new Date(),
-      },
-    ]);
-=======
     const userMessage = {
         type: 'user',
         content: question,
@@ -2261,23 +2099,11 @@ function UploadDisclosure() {
     
     // Save user message to backend
     await saveMessageToBackend('user', question);
->>>>>>> dev
 
     // Generate dummy answer
     const answer = generateDummyAnswer(question);
     
     // Simulate thinking delay
-<<<<<<< HEAD
-    setTimeout(() => {
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          type: 'system',
-          content: answer,
-          timestamp: new Date(),
-        },
-      ]);
-=======
     setTimeout(async () => {
       const assistantMessage = {
           type: 'system',
@@ -2288,24 +2114,17 @@ function UploadDisclosure() {
       
       // Save assistant message to backend
       await saveMessageToBackend('assistant', answer);
->>>>>>> dev
     }, 500);
 
     setQuestionInput('');
   };
 
-<<<<<<< HEAD
-  const handleGetComplianceScore = () => {
-=======
   const handleGetComplianceScore = async () => {
->>>>>>> dev
     if (!selectedFile) {
       alert('Please upload a PDF file first');
       return;
     }
     
-<<<<<<< HEAD
-=======
     // Check if "Get Compliance Score" message already exists for THIS specific file
     // Allow multiple compliance score requests if different files are uploaded
     const hasComplianceScoreRequestForThisFile = chatMessages.some(
@@ -2319,7 +2138,6 @@ function UploadDisclosure() {
       return;
     }
     
->>>>>>> dev
     setIsInteractMode(false);
     setShowFormFields(false);
     
@@ -2331,16 +2149,6 @@ function UploadDisclosure() {
     setAnnouncementTitle(dummyTitle);
     setDateOfEvent(dummyDate);
     
-<<<<<<< HEAD
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        type: 'user',
-        content: 'Get Compliance Score',
-        timestamp: new Date(),
-      },
-    ]);
-=======
     const complianceScoreMsg = {
         type: 'user',
         content: 'Get Compliance Score',
@@ -2352,7 +2160,6 @@ function UploadDisclosure() {
     
     // Don't save message here - it will be saved after session is created in handleRunValidationWithData
     // The message is already in the UI, we'll save it to backend once session exists
->>>>>>> dev
     
     // Directly trigger validation
     setTimeout(() => {
@@ -2360,9 +2167,6 @@ function UploadDisclosure() {
     }, 100);
   };
 
-<<<<<<< HEAD
-  const handleRunValidationWithData = (titleOverride = null, dateOverride = null) => {
-=======
   // Extract success handling to separate function for reuse
   const handlePollingSuccess = async (docId, messageId, statusResponse) => {
     try {
@@ -2770,7 +2574,6 @@ function UploadDisclosure() {
   };
 
   const handleRunValidationWithData = async (titleOverride = null, dateOverride = null) => {
->>>>>>> dev
     const finalTitle = titleOverride || announcementTitle.trim();
     const finalDate = dateOverride || dateOfEvent;
     
@@ -2792,42 +2595,11 @@ function UploadDisclosure() {
       return;
     }
 
-<<<<<<< HEAD
-    const disclosureResult = addDisclosure({
-      announcementTitle: finalTitle,
-      dateOfEvent: finalDate,
-      fileName: selectedFile.name,
-    });
-
-    const newDisclosureId = disclosureResult.id;
-    const immediateComplianceScore = disclosureResult.complianceScore;
-    setDisclosureId(newDisclosureId);
-=======
->>>>>>> dev
     setIsValidating(true);
     setCurrentStep(0);
     setProgressPercentage(0);
     setShowFormFields(false);
 
-<<<<<<< HEAD
-    // Format date for display
-    const formatDate = (dateString) => {
-      if (!dateString) return '';
-      try {
-        const [year, month, day] = dateString.split('-');
-        return `${day}/${month}/${year}`;
-      } catch {
-        return dateString;
-      }
-    };
-
-    // Add single progress message that will be updated
-    const newProgressMessageId = `progress-${Date.now()}`;
-    setProgressMessageId(newProgressMessageId);
-    scoreSetRef.current = false; // Reset ref for new validation
-    const initialContent = `File: ${selectedFile.name}\nTitle: ${finalTitle}\nEvent Date: ${formatDate(finalDate)}\nProgress: 0%\n\n${progressSteps.map((s) => `    ${s.name}`).join('\n')}`;
-    
-=======
     // Add initial progress message
     const newProgressMessageId = `progress-${Date.now()}`;
     setProgressMessageId(newProgressMessageId);
@@ -2843,7 +2615,6 @@ function UploadDisclosure() {
       timestamp: new Date(),
     };
     
->>>>>>> dev
     setChatMessages((prev) => [
       ...prev,
       {
@@ -2853,174 +2624,13 @@ function UploadDisclosure() {
         timestamp: new Date(),
         isProgress: true,
         progressSteps: progressSteps.map((step) => ({ ...step, status: 'pending' })),
-<<<<<<< HEAD
-=======
         lastRevealedStepIndex: -1, // Initialize to -1 so steps appear one by one
->>>>>>> dev
         fileInfo: {
           fileName: selectedFile.name,
           title: finalTitle,
           eventDate: finalDate,
         },
         progressPercentage: 0,
-<<<<<<< HEAD
-      },
-    ]);
-
-    // Progress steps in chat - 6 steps, 1 second each
-    let stepIndex = 0;
-    const stepInterval = setInterval(() => {
-      stepIndex++;
-      setCurrentStep(stepIndex);
-      const percentage = Math.round((stepIndex / progressSteps.length) * 100);
-      setProgressPercentage(percentage);
-
-      // Update the progress message with current step
-      const step = progressSteps[stepIndex - 1];
-      const formatDateForUpdate = (dateString) => {
-        if (!dateString) return '';
-        try {
-          const [year, month, day] = dateString.split('-');
-          return `${day}/${month}/${year}`;
-        } catch {
-          return dateString;
-        }
-      };
-      
-      setChatMessages((prev) => {
-        return prev.map((msg) => {
-          if (msg.id === newProgressMessageId && msg.isProgress) {
-            // Create new progressSteps array with updated status
-            const updatedSteps = msg.progressSteps.map((s, idx) => {
-              if (idx === stepIndex - 1) {
-                return { ...s, status: 'processing' };
-              }
-              return s;
-            });
-            // Build content string with file info and steps
-            const stepsContent = updatedSteps
-              .map((s) => {
-                if (s.status === 'processing') return `    ${s.name}...`;
-                if (s.status === 'done') return `    ${s.name} DONE`;
-                return `    ${s.name}`;
-              })
-              .join('\n');
-            const content = `File: ${msg.fileInfo.fileName}\nTitle: ${msg.fileInfo.title}\nEvent Date: ${formatDateForUpdate(msg.fileInfo.eventDate)}\nProgress: ${percentage}%\n\n${stepsContent}`;
-            return {
-              ...msg,
-              progressSteps: updatedSteps,
-              content,
-              progressPercentage: percentage,
-            };
-          }
-          return msg;
-        });
-      });
-
-      // After a brief delay, mark step as done
-    setTimeout(() => {
-        const formatDateForUpdate = (dateString) => {
-          if (!dateString) return '';
-          try {
-            const [year, month, day] = dateString.split('-');
-            return `${day}/${month}/${year}`;
-          } catch {
-            return dateString;
-          }
-        };
-        
-        setChatMessages((prev) => {
-          return prev.map((msg) => {
-              if (msg.id === newProgressMessageId && msg.isProgress) {
-              // Create new progressSteps array with updated status
-              const updatedSteps = msg.progressSteps.map((s, idx) => {
-                if (idx === stepIndex - 1) {
-                  return { ...s, status: 'done' };
-                }
-                return s;
-              });
-              // Build content string with file info and steps
-              const stepsContent = updatedSteps
-                .map((s) => {
-                  if (s.status === 'processing') return `    ${s.name}...`;
-                  if (s.status === 'done') return `    ${s.name} DONE`;
-                  return `    ${s.name}`;
-                })
-                .join('\n');
-              const currentPercentage = Math.round((stepIndex / progressSteps.length) * 100);
-              const content = `File: ${msg.fileInfo.fileName}\nTitle: ${msg.fileInfo.title}\nEvent Date: ${formatDateForUpdate(msg.fileInfo.eventDate)}\nProgress: ${currentPercentage}%\n\n${stepsContent}`;
-              return {
-                ...msg,
-                progressSteps: updatedSteps,
-                content,
-                progressPercentage: currentPercentage,
-              };
-            }
-            return msg;
-          });
-        });
-      }, 800);
-
-      if (stepIndex >= progressSteps.length) {
-        clearInterval(stepInterval);
-      setIsValidating(false);
-        setValidationComplete(true);
-        
-        // Add "Validation completed successfully" as the last step in the same message
-        setTimeout(() => {
-          const formatDateForFinal = (dateString) => {
-            if (!dateString) return '';
-            try {
-              const [year, month, day] = dateString.split('-');
-              return `${day}/${month}/${year}`;
-            } catch {
-              return dateString;
-            }
-          };
-          
-          // Update with completion message - use the compliance score returned from addDisclosure
-          const complianceScore = immediateComplianceScore;
-          
-          setChatMessages((prev) => {
-            return prev.map((msg) => {
-              if (msg.id === newProgressMessageId && msg.isProgress) {
-                const stepsContent = msg.progressSteps
-                  .map((s) => `    ${s.name} DONE`)
-                  .join('\n');
-                const viewReportLink = newDisclosureId ? `\n    View Report` : '';
-                const scoreLine = complianceScore != null ? `\n    Compliance Score: ${complianceScore}%` : '';
-                const content = `File: ${msg.fileInfo.fileName}\nTitle: ${msg.fileInfo.title}\nEvent Date: ${formatDateForFinal(msg.fileInfo.eventDate)}\nProgress: 100%\n\n${stepsContent}\n    Validation completed successfully DONE${scoreLine}${viewReportLink}`;
-                // Mark that score has been set to prevent useEffect from overwriting
-                if (complianceScore != null) {
-                  scoreSetRef.current = true;
-                }
-                return {
-                  ...msg,
-                  content,
-                  progressPercentage: 100,
-                  complianceScore: complianceScore || msg.complianceScore,
-                  viewReportPath: newDisclosureId ? `/validation/${newDisclosureId}` : null,
-                };
-              }
-              return msg;
-            });
-          });
-          
-          // Add next steps message
-          setTimeout(() => {
-            setChatMessages((prev) => [
-              ...prev,
-              {
-                type: 'system',
-                content: 'Would you like to upload another PDF document?',
-                timestamp: new Date(),
-              },
-            ]);
-          }, 500);
-        }, 800);
-      }
-    }, 1000);
-=======
         // Store reference to file being uploaded (will be updated with documentId)
         _uploadingFile: fileBeingUploaded,
       },
@@ -3442,7 +3052,6 @@ function UploadDisclosure() {
         }
       }
     }
->>>>>>> dev
   };
 
   // Wrapper function for form submission
@@ -3459,10 +3068,7 @@ function UploadDisclosure() {
     const isEmpty = (line) => line.trim() === '';
     const isComplianceScore = (line) => line.startsWith('Compliance Score:');
     const isViewReport = (line) => line.startsWith('View Report');
-<<<<<<< HEAD
-=======
     const isProcessing = (line) => line.includes('...') && !line.includes('DONE');
->>>>>>> dev
 
     return (
       <div key={idx} className={`chat-message ${msg.type === 'user' ? 'user-message' : 'system-message'}`}>
@@ -3477,12 +3083,6 @@ function UploadDisclosure() {
             </button>
           ) : msg.isProgress ? (
             <div className="progress-steps-container">
-<<<<<<< HEAD
-              {msg.content.split('\n').map((line, lineIdx) => {
-                const trimmed = trimmedLine(line);
-                return (
-                  <div key={lineIdx} className={`progress-step-line ${isFileDetail(trimmed) ? 'file-detail' : ''} ${isProgress(trimmed) ? 'progress-line' : ''} ${hasDone(line) ? 'step-done' : ''} ${isEmpty(trimmed) ? 'empty-line' : ''} ${isComplianceScore(trimmed) ? 'compliance-score-line' : ''} ${isViewReport(trimmed) ? 'view-report-line' : ''}`}>
-=======
               {(() => {
                 // Track which steps we've already rendered to avoid duplicates
                 const renderedSteps = new Set();
@@ -3541,16 +3141,11 @@ function UploadDisclosure() {
                 
                 return (
                   <div key={lineIdx} className={`progress-step-line ${isFileDetail(trimmed) ? 'file-detail' : ''} ${isProgress(trimmed) ? 'progress-line' : ''} ${(hasDone(line) || isStepDone) ? 'step-done' : ''} ${isEmpty(trimmed) ? 'empty-line' : ''} ${isComplianceScore(trimmed) ? 'compliance-score-line' : ''} ${isViewReport(trimmed) ? 'view-report-line' : ''} ${(isProcessing(line) || isStepProcessing) ? 'processing-step' : ''}`}>
->>>>>>> dev
                     {isFileDetail(trimmed) ? (
                       <span>{line}</span>
                     ) : isProgress(trimmed) ? (
                       <div className="progress-line-container">
-<<<<<<< HEAD
-                        <span className="progress-text">{line}</span>
-=======
                         <span className="progress-text">Progress: {msg.progressPercentage || 0}%</span>
->>>>>>> dev
                         <div className="progress-bar-wrapper">
                           <div className="progress-bar" style={{ width: `${msg.progressPercentage || 0}%` }}></div>
                         </div>
@@ -3569,9 +3164,6 @@ function UploadDisclosure() {
                       <button
                         className="view-report-link-inline"
                         onClick={() => {
-<<<<<<< HEAD
-                          const path = msg.viewReportPath || (disclosureId ? `/validation/${disclosureId}` : '/validation');
-=======
                           // CRITICAL FIX: Ensure we always have a valid path with result_index if available
                           // Try multiple sources: msg.viewReportPath, msg.metadata.viewReportPath, disclosureId, msg.metadata.documentId
                           let path = msg.viewReportPath;
@@ -3595,7 +3187,6 @@ function UploadDisclosure() {
                             console.error('[View Report] No valid path found for View Report link');
                             return;
                           }
->>>>>>> dev
                           navigate(path);
                         }}
                       >
@@ -3615,12 +3206,8 @@ function UploadDisclosure() {
                     )}
                   </div>
                 );
-<<<<<<< HEAD
-              })}
-=======
                 }).filter(Boolean); // Remove null entries (duplicate steps)
               })()}
->>>>>>> dev
             </div>
           ) : (
             <p>{msg.content}</p>
@@ -3632,12 +3219,6 @@ function UploadDisclosure() {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="chat-upload-container">
-      <h1 className="chat-page-title">Upload Disclosure</h1>
-      
-      <div className="chat-container" ref={chatContainerRef}>
-=======
     <div className="chat-upload-container-with-sidebar">
       <ChatHistorySidebar
         ref={chatHistorySidebarRef}
@@ -3657,7 +3238,6 @@ function UploadDisclosure() {
         )}
         
         <div className={`chat-container ${isLoadingSession ? 'loading' : ''}`} ref={chatContainerRef}>
->>>>>>> dev
         {/* Show upload area only if no chat history */}
         {!selectedFile && chatMessages.length === 0 && (
           <div className="chat-message system-message">
@@ -3743,11 +3323,7 @@ function UploadDisclosure() {
                     <div className="form-fields">
                       <div className="form-field">
                         <label htmlFor="announcement-title" className="field-label">
-<<<<<<< HEAD
-                          Announcement Title <span className="required">*</span>
-=======
                           File Name <span className="required">*</span>
->>>>>>> dev
                         </label>
                         <input
                           type="text"
@@ -3761,11 +3337,7 @@ function UploadDisclosure() {
                       </div>
                       <div className="form-field">
                         <label htmlFor="date-of-event" className="field-label">
-<<<<<<< HEAD
-                          Date of Event <span className="required">*</span>
-=======
                           Date of Upload <span className="required">*</span>
->>>>>>> dev
                         </label>
                         <input
                           type="date"
@@ -3777,8 +3349,6 @@ function UploadDisclosure() {
                         />
                       </div>
                     </div>
-<<<<<<< HEAD
-=======
                     
                     {/* Show mandate and submission type dropdowns BEFORE upload */}
                     {selectedFile && (
@@ -3880,33 +3450,23 @@ function UploadDisclosure() {
                       </>
                     )}
                     
->>>>>>> dev
                     <button
                       className="run-validation-button"
                       onClick={handleRunValidation}
                       disabled={isValidating}
-<<<<<<< HEAD
-                    >
-                      {isValidating ? 'Processing...' : 'Submit for Validation'}
-=======
                       style={{ marginTop: '20px' }}
                     >
                       {isValidating ? 'Processing...' : 'Get Compliance Score'}
->>>>>>> dev
                     </button>
                   </div>
                 </div>
                 <div className="action-buttons-container">
-<<<<<<< HEAD
-                  <button className="action-button upload-another-button" onClick={handleUploadAnotherPDF}>
-=======
                   <button 
                     className="action-button upload-another-button"
                     onClick={handleUploadAnotherPDF}
                     disabled={!validationComplete}
                     title={!validationComplete ? "Please wait for compliance score to be generated" : ""}
                   >
->>>>>>> dev
                     Upload Another PDF
                   </button>
                 </div>
@@ -3915,12 +3475,9 @@ function UploadDisclosure() {
 
             {validationComplete && (
               <div className="action-buttons-container">
-<<<<<<< HEAD
-=======
                 {/* <button className="action-button interact-button" onClick={handleInteractWithPDF}>
                   Interact with PDF
                 </button> */}
->>>>>>> dev
                 <button className="action-button upload-another-button" onClick={handleUploadAnotherPDF}>
                   Upload Another PDF
                 </button>
@@ -3948,12 +3505,6 @@ function UploadDisclosure() {
                   </form>
                 </div>
                 <div className="compliance-button-sticky">
-<<<<<<< HEAD
-                  <button className="action-button compliance-button" onClick={handleGetComplianceScore}>
-                    Get Compliance Score
-                  </button>
-                  <button className="action-button upload-another-button" onClick={handleUploadAnotherPDF}>
-=======
                   {/* <button className="action-button interact-button" onClick={handleInteractWithPDF}>
                     Interact with PDF
                   </button> */}
@@ -3963,27 +3514,12 @@ function UploadDisclosure() {
                     disabled={!validationComplete}
                     title={!validationComplete ? "Please wait for compliance score to be generated" : ""}
                   >
->>>>>>> dev
                     Upload Another PDF
                   </button>
                 </div>
               </>
             )}
 
-<<<<<<< HEAD
-            {selectedFile && !showFormFields && !isInteractMode && !validationComplete && !isValidating && (
-              <div className="action-buttons-container">
-                <button className="action-button interact-button" onClick={handleInteractWithPDF}>
-                  Interact with PDF
-                </button>
-                <button className="action-button compliance-button" onClick={handleGetComplianceScore}>
-                  Get Compliance Score
-                </button>
-              </div>
-            )}
-          </>
-        )}
-=======
             {/* REMOVED: This entire section was showing duplicate dropdowns after upload starts.
                 Dropdowns should ONLY appear in the form section before upload (when showFormFields is true).
                 After upload starts and processing begins, users should NOT see duplicate dropdowns.
@@ -3991,7 +3527,6 @@ function UploadDisclosure() {
           </>
         )}
         </div>
->>>>>>> dev
       </div>
     </div>
   );

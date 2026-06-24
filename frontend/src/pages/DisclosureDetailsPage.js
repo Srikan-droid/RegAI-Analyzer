@@ -1,70 +1,12 @@
-<<<<<<< HEAD
-import React, { useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useDisclosures } from '../context/DisclosuresContext';
-import { formatDisplayDate } from '../data/disclosures';
-import { generateRuleResults } from '../utils/ruleUtils';
-import { findRuleMetadata } from '../constants/validationRules';
-import DisclosureDetailsModal from '../components/DisclosureDetailsModal';
-=======
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { formatDisplayDate } from '../data/disclosures';
 import DisclosureDetailsModal from '../components/DisclosureDetailsModal';
 import apiService from '../services/api';
->>>>>>> dev
 import './DisclosureDetailsPage.css';
 
 function DisclosureDetailsPage() {
   const { disclosureId } = useParams();
-<<<<<<< HEAD
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { disclosures } = useDisclosures();
-  const [showModal, setShowModal] = useState(false);
-
-  const disclosure = useMemo(
-    () => disclosures.find((item) => String(item.id) === String(disclosureId)),
-    [disclosures, disclosureId]
-  );
-
-  const derivedRules = useMemo(() => {
-    if (!disclosure) return [];
-    if (disclosure.ruleResults?.length) return disclosure.ruleResults;
-    if (disclosure.complianceScore != null) {
-      return generateRuleResults(disclosure.complianceScore);
-    }
-    return [];
-  }, [disclosure]);
-
-  const failedRules = useMemo(() => {
-    return derivedRules.filter((rule) => rule.status?.toLowerCase() === 'fail');
-  }, [derivedRules]);
-
-  const aiRecommendations = useMemo(() => {
-    return failedRules.map((rule) => ({
-      ruleName: rule.name,
-      recommendation: generateAIRecommendation(rule.name),
-    }));
-  }, [failedRules]);
-
-  if (!disclosure) {
-    return (
-      <div className="disclosure-details-page">
-        <div className="details-card">
-          <p className="details-empty">We couldn't find that disclosure.</p>
-          <button className="back-button" onClick={() => navigate('/validation')}>
-            Back to Validation History
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const { announcementTitle, dateOfEvent, complianceScore, fileStatus, fileName, regulations = [] } = disclosure;
-  const fileUrl = fileName ? `/uploads/${fileName}` : null;
-  const isPdfFile = fileName?.toLowerCase().endsWith('.pdf');
-=======
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -519,7 +461,6 @@ function DisclosureDetailsPage() {
       }
     };
   }, []);
->>>>>>> dev
 
   const handleBack = () => {
     if (location.state?.from === 'dashboard') {
@@ -529,15 +470,6 @@ function DisclosureDetailsPage() {
     }
   };
 
-<<<<<<< HEAD
-  return (
-    <div className="disclosure-details-page">
-      <header className="details-header">
-      <button className="back-button" onClick={handleBack}>
-        ← Back
-      </button>
-    </header>
-=======
   if (loading) {
     return (
       <div className="disclosure-details-page">
@@ -584,26 +516,10 @@ function DisclosureDetailsPage() {
           ← Back
         </button>
       </header>
->>>>>>> dev
 
       <section className="details-card">
         <div className="details-summary">
           <div className="summary-text">
-<<<<<<< HEAD
-            <h1>{announcementTitle}</h1>
-            <p>
-              Date: <span>{formatDisplayDate(dateOfEvent)}</span> • Source: <span>Upload</span>
-            </p>
-            <p>
-              Status: <span className={`status-badge ${getStatusClass(fileStatus)}`}>{fileStatus}</span>
-            </p>
-            {regulations.length > 0 && (
-              <div className="regulations-section">
-                <span className="regulations-label">Regulations</span>
-                <div className="regulations-list">
-                  {regulations.map((reg) => (
-                    <span key={reg} className="regulation-pill">
-=======
             <h1>{announcement_title}</h1>
             <p>
               Date: <span>{date_of_event ? formatDisplayDate(date_of_event) : '-'}</span> • Source: <span>Upload</span>
@@ -617,7 +533,6 @@ function DisclosureDetailsPage() {
                 <div className="regulations-list">
                   {regulations.map((reg, index) => (
                     <span key={index} className="regulation-pill">
->>>>>>> dev
                       {reg}
                     </span>
                   ))}
@@ -627,19 +542,11 @@ function DisclosureDetailsPage() {
           </div>
           <div className="summary-actions">
             <div className="file-actions">
-<<<<<<< HEAD
-              {isPdfFile && fileUrl ? (
-                <>
-                  <a
-                    className="file-action-btn"
-                    href={fileUrl}
-=======
               {isPdfFile && file_url ? (
                 <>
                   <a
                     className="file-action-btn"
                     href={file_url}
->>>>>>> dev
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -647,13 +554,8 @@ function DisclosureDetailsPage() {
                   </a>
                   <a
                     className="file-action-btn secondary"
-<<<<<<< HEAD
-                    href={fileUrl}
-                    download={fileName}
-=======
                     href={file_url}
                     download={file_name}
->>>>>>> dev
                   >
                     Download
                   </a>
@@ -663,19 +565,12 @@ function DisclosureDetailsPage() {
               )}
             </div>
             <div className="summary-score">
-<<<<<<< HEAD
-              <span>Compliance Score</span>
-              {complianceScore != null ? (
-                <strong className={`compliance-score ${getScoreIndicatorClass(complianceScore)}`}>
-                  {complianceScore}%
-=======
               <span>COMPLIANCE SCORE</span>
               {compliance_score != null ? (
                 <strong className={`compliance-score ${getScoreIndicatorClass(compliance_score)}`}>
                   {typeof compliance_score === 'number' 
                     ? compliance_score.toFixed(2) 
                     : parseFloat(compliance_score || 0).toFixed(2)}%
->>>>>>> dev
                 </strong>
               ) : (
                 <strong>-</strong>
@@ -689,16 +584,6 @@ function DisclosureDetailsPage() {
         <div className="rules-header">
           <h2>Rules Validated</h2>
           <div className="rules-actions">
-<<<<<<< HEAD
-            <span>{derivedRules.length || 0} checks</span>
-            <button className="view-details-link" onClick={() => setShowModal(true)}>
-              View details
-            </button>
-          </div>
-        </div>
-        <div className="rules-table-wrapper">
-          {derivedRules.length ? (
-=======
             <span>{rules_summary.total_checks} checks</span>
             {rules_summary.pass_count > 0 && <span className="pass-count">{rules_summary.pass_count} Pass</span>}
             {rules_summary.fail_count > 0 && <span className="fail-count">{rules_summary.fail_count} Fail</span>}
@@ -711,34 +596,15 @@ function DisclosureDetailsPage() {
         </div>
         <div className="rules-table-wrapper">
           {rules.length > 0 ? (
->>>>>>> dev
             <table className="rule-table">
               <thead>
                 <tr>
                   <th>Rule ID</th>
-<<<<<<< HEAD
-                  <th>Rule Description</th>
-=======
                   <th>Message</th>
->>>>>>> dev
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
-                {derivedRules.map((rule) => {
-                  const ruleIdLabel = getRuleIdLabel(rule);
-                  return (
-                    <tr key={rule.id}>
-                      <td className="rule-id-cell">
-                        {ruleIdLabel ? <span className="rule-id-pill">{ruleIdLabel}</span> : '—'}
-                      </td>
-                      <td>
-                        <span className="rule-name">{rule.name || 'Rule description unavailable'}</span>
-                      </td>
-                      <td>
-                        <span className={`rule-status ${rule.status?.toLowerCase()}`}>{rule.status}</span>
-=======
                 {rules.map((rule, index) => {
                   const isCRRule = rule.rule_id?.startsWith('CR_');
                   const statusText = rule.validation_status === 'SUCCESS' ? 'Pass' : rule.validation_status === 'FAIL' ? 'Fail' : rule.validation_status;
@@ -756,7 +622,6 @@ function DisclosureDetailsPage() {
                         <span className={`rule-status ${getRuleStatusClass(rule.validation_status)}`}>
                           {statusText}
                         </span>
->>>>>>> dev
                       </td>
                     </tr>
                   );
@@ -769,29 +634,6 @@ function DisclosureDetailsPage() {
         </div>
       </section>
 
-<<<<<<< HEAD
-      {aiRecommendations.length > 0 && (
-        <section className="details-card">
-          <div className="ai-recommendations-header">
-            <h2>AI Recommendation</h2>
-          </div>
-          <div className="ai-recommendations-list">
-            {aiRecommendations.map((rec, index) => (
-              <div key={index} className="ai-recommendation-item">
-                <div className="recommendation-rule">
-                  <span className="recommendation-icon">💡</span>
-                  <strong>{rec.ruleName}</strong>
-                </div>
-                <p className="recommendation-text">{rec.recommendation}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {showModal && (
-        <DisclosureDetailsModal disclosure={disclosure} onClose={() => setShowModal(false)} />
-=======
       {/* AI Recommendation section */}
       {(() => {
         // Get recommendations from top-level recommendation array (new structure)
@@ -943,7 +785,6 @@ function DisclosureDetailsPage() {
 
       {showModal && documentData && (
         <DisclosureDetailsModal documentData={documentData} onClose={() => setShowModal(false)} />
->>>>>>> dev
       )}
     </div>
   );
@@ -951,17 +792,6 @@ function DisclosureDetailsPage() {
 
 const getStatusClass = (status) => {
   switch (status) {
-<<<<<<< HEAD
-    case 'Completed':
-      return 'status-completed';
-    case 'Processing':
-      return 'status-processing';
-    case 'Pending':
-      return 'status-pending';
-    case 'Error':
-      return 'status-error';
-    case 'Cancelled':
-=======
     case 'COMPLETED':
       return 'status-completed';
     case 'PROCESSING':
@@ -971,7 +801,6 @@ const getStatusClass = (status) => {
     case 'ERROR':
       return 'status-error';
     case 'CANCELLED':
->>>>>>> dev
       return 'status-cancelled';
     default:
       return '';
@@ -984,34 +813,6 @@ const getScoreIndicatorClass = (score) => {
   return 'score-poor';
 };
 
-<<<<<<< HEAD
-const generateAIRecommendation = (ruleName) => {
-  const recommendations = {
-    'Announcement title matches filing': 'Ensure the announcement title exactly matches the filing document title. Review the submitted document and update the title to reflect the exact wording used in the official filing.',
-    'Date of event is within acceptable range': 'Verify that the date of event falls within the regulatory reporting window. If the date is outside the acceptable range, provide justification or correct the date to match the actual event occurrence.',
-    'All mandatory fields are present': 'Review the disclosure document and ensure all required fields as per the regulation are completed. Missing mandatory fields may result in non-compliance penalties.',
-    'File format is PDF': 'Convert the document to PDF format before submission. PDF format ensures document integrity and compatibility with regulatory systems.',
-    'Company name mentioned in document': 'Include the full legal company name as registered with the regulatory authority. Ensure the name appears consistently throughout the document.',
-    'Disclosure made within 24 hours of event': 'Submit the disclosure within 24 hours of the event occurrence. Late submissions may require additional justification and could result in penalties.',
-    'Relevant regulation cited correctly': 'Verify that the regulation numbers and clauses cited in the document are accurate and current. Cross-reference with the latest regulatory guidelines.',
-    'Financial figures are consistent': 'Ensure all financial figures mentioned in the document are consistent across all sections. Verify calculations and cross-check with source documents.',
-    'Signatories are authorized personnel': 'Confirm that the signatories listed in the document are authorized to sign on behalf of the company as per the company\'s authorization matrix.',
-    'Document is free from typos': 'Perform a thorough review of the document for spelling and grammatical errors. Typos can affect the document\'s credibility and may need to be corrected through an amendment.',
-  };
-
-  return recommendations[ruleName] || 'Review the validation rule and ensure all requirements are met. Consult the regulatory guidelines for specific compliance requirements related to this rule.';
-};
-
-const getRuleIdLabel = (rule) => {
-  if (!rule) return '';
-  if (rule.ruleId) return rule.ruleId;
-  const metadata = findRuleMetadata(rule.ruleId || rule.name || rule.check);
-  return metadata?.id || '';
-};
-
-export default DisclosureDetailsPage;
-
-=======
 const getRuleStatusClass = (status) => {
   if (status === 'SUCCESS') return 'pass';
   if (status === 'FAIL') return 'fail';
@@ -1019,4 +820,3 @@ const getRuleStatusClass = (status) => {
 };
 
 export default DisclosureDetailsPage;
->>>>>>> dev

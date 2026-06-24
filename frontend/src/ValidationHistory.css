@@ -16,16 +16,10 @@
 }
 .filters-header {
   display: flex;
-<<<<<<< HEAD
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 16px;
-=======
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
   gap: 12px;
->>>>>>> dev
 }
 
 .toggle-filters-btn {
@@ -285,8 +279,6 @@
   font-weight: 600;
 }
 
-<<<<<<< HEAD
-=======
 .validation-table tbody tr.selected-row {
   background-color: #e8f4f8;
 }
@@ -295,7 +287,6 @@
   background-color: #d4e8f0;
 }
 
->>>>>>> dev
 .validation-table tbody tr:hover {
   background: #f9f9f9;
 }
@@ -336,25 +327,18 @@
   font-size: 0.8rem;
   font-weight: 500;
   white-space: normal;
-<<<<<<< HEAD
-  max-width: 280px;
-=======
   word-wrap: break-word;
   word-break: break-word;
   max-width: 400px;
   min-width: 200px;
->>>>>>> dev
   text-align: left;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 10;
-<<<<<<< HEAD
-=======
   overflow-wrap: break-word;
   hyphens: auto;
->>>>>>> dev
 }
 
 .info-tooltip::before {
@@ -476,8 +460,6 @@
   }
 }
 
-<<<<<<< HEAD
-=======
 .export-json-button {
   display: inline-flex;
   align-items: center;
@@ -503,4 +485,3 @@
 .export-json-button:active {
   transform: translateY(0);
 }
->>>>>>> dev

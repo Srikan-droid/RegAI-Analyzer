@@ -4,10 +4,6 @@ import apiService from './services/api';
 
 function Profile({ user }) {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
-<<<<<<< HEAD
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-=======
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,14 +12,11 @@ function Profile({ user }) {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
->>>>>>> dev
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(user);
 
-<<<<<<< HEAD
-=======
   const validatePassword = (pwd) => {
     const checks = {
       length: pwd.length >= 8,
@@ -35,7 +28,6 @@ function Profile({ user }) {
     return checks;
   };
 
->>>>>>> dev
   useEffect(() => {
     // Fetch latest user info
     const fetchUserInfo = async () => {
@@ -82,8 +74,6 @@ function Profile({ user }) {
     }
   };
 
-<<<<<<< HEAD
-=======
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setError('');
@@ -115,7 +105,6 @@ function Profile({ user }) {
     }
   };
 
->>>>>>> dev
   return (
     <div className="profile-container">
       <div className="profile-card">
@@ -128,25 +117,15 @@ function Profile({ user }) {
           </div>
           
           <div className="profile-info-item">
-<<<<<<< HEAD
-            <label className="profile-label">Full Name</label>
-            <div className="profile-value">{userInfo?.full_name || 'Not set'}</div>
-=======
             <label className="profile-label">Name</label>
             <div className="profile-value">{userInfo?.name || 'Not set'}</div>
->>>>>>> dev
           </div>
           
           <div className="profile-info-item">
             <label className="profile-label">Role</label>
             <div className="profile-value">
-<<<<<<< HEAD
-              <span className={`role-badge ${userInfo?.role === 'admin' ? 'admin' : 'user'}`}>
-                {userInfo?.role === 'admin' ? 'Admin' : 'User'}
-=======
               <span className={`role-badge ${userInfo?.role?.role_name === 'admin' ? 'admin' : 'user'}`}>
                 {userInfo?.role?.role_name ? userInfo.role.role_name.charAt(0).toUpperCase() + userInfo.role.role_name.slice(1) : 'User'}
->>>>>>> dev
               </span>
             </div>
           </div>
@@ -154,110 +133,13 @@ function Profile({ user }) {
           <div className="profile-info-item">
             <label className="profile-label">Account Type</label>
             <div className="profile-value">
-<<<<<<< HEAD
-              {userInfo?.is_guest ? (
-=======
               {userInfo?.auth_provider === 'guest' ? (
->>>>>>> dev
                 <span className="guest-badge">Guest User</span>
               ) : (
                 <span className="regular-badge">Regular User</span>
               )}
             </div>
           </div>
-<<<<<<< HEAD
-          
-          <div className="profile-info-item">
-            <label className="profile-label">Password Status</label>
-            <div className="profile-value">
-              {userInfo?.has_password ? (
-                <span className="password-set">Password Set</span>
-              ) : (
-                <span className="password-not-set">No Password Set</span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {userInfo?.is_guest && !userInfo?.has_password && (
-          <div className="password-section">
-            {!showPasswordForm ? (
-              <div className="password-prompt">
-                <p className="password-prompt-text">
-                  As a guest user, you can set a password to convert your account to a regular account.
-                </p>
-                <button
-                  className="set-password-button"
-                  onClick={() => setShowPasswordForm(true)}
-                >
-                  Set Password
-                </button>
-              </div>
-            ) : (
-              <form className="password-form" onSubmit={handleSetPassword}>
-                <h3 className="password-form-title">Set Password</h3>
-                
-                <div className="password-form-group">
-                  <label className="password-form-label">New Password</label>
-                  <input
-                    type="password"
-                    className="password-form-input"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password (min 8 characters)"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-                
-                <div className="password-form-group">
-                  <label className="password-form-label">Confirm Password</label>
-                  <input
-                    type="password"
-                    className="password-form-input"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm password"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-                
-                {error && (
-                  <div className="password-form-error">{error}</div>
-                )}
-                
-                {success && (
-                  <div className="password-form-success">{success}</div>
-                )}
-                
-                <div className="password-form-actions">
-                  <button
-                    type="button"
-                    className="password-form-cancel"
-                    onClick={() => {
-                      setShowPasswordForm(false);
-                      setPassword('');
-                      setConfirmPassword('');
-                      setError('');
-                    }}
-                    disabled={loading}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="password-form-submit"
-                    disabled={loading}
-                  >
-                    {loading ? 'Setting...' : 'Set Password'}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        )}
-=======
         </div>
 
         {/* Reset Password Section */}
@@ -443,7 +325,6 @@ function Profile({ user }) {
             </form>
           )}
         </div>
->>>>>>> dev
       </div>
     </div>
   );

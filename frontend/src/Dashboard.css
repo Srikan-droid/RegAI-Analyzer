@@ -54,21 +54,14 @@
 }
 
 .metric-card {
-<<<<<<< HEAD
-  background: white;
-=======
->>>>>>> dev
   border-radius: 12px;
   padding: 24px 32px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border-left: 4px solid;
   transition: all 0.3s ease;
   color: #ffffff !important;
-<<<<<<< HEAD
-=======
   /* Background will be set by specific classes */
   background: #3a7fb3; /* Default fallback color */
->>>>>>> dev
 }
 
 .metric-card:hover {
@@ -87,38 +80,22 @@
 
 .metric-card.total-announcements {
   border-left-color: #1e5f8b;
-<<<<<<< HEAD
-  background: #3a7fb3;
-=======
   background: #3a7fb3 !important;
->>>>>>> dev
 }
 
 .metric-card.score-high {
   border-left-color: #3c8c32;
-<<<<<<< HEAD
-  background: #66b25a;
-=======
   background: #66b25a !important;
->>>>>>> dev
 }
 
 .metric-card.score-mid {
   border-left-color: #c47c06;
-<<<<<<< HEAD
-  background: #f7b347;
-=======
   background: #f7b347 !important;
->>>>>>> dev
 }
 
 .metric-card.score-low {
   border-left-color: #b91c1c;
-<<<<<<< HEAD
-  background: #e34c4c;
-=======
   background: #e34c4c !important;
->>>>>>> dev
 }
 
 .metric-value {

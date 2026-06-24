@@ -2,9 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Layout.css';
 import PortalModeContext from './context/PortalModeContext';
+import { useAgent } from './context/AgentContext';
 import apiService from './services/api';
 
 const getMenuKeyFromPath = (path) => {
+  if (path === '/analyzer/home') {
+    return 'dashboard';
+  }
+  if (path.startsWith('/analyzer/agent')) {
+    return 'agent';
+  }
+  if (path.startsWith('/analyzer/history')) {
+    return 'history';
+  }
+  if (path.startsWith('/analyzer/knowledge')) {
+    return 'knowledge';
+  }
   if (path === '/home' || path === '/') {
     return 'dashboard';
   }
@@ -84,18 +97,19 @@ const enterpriseNavItems = [
       </svg>
     ),
   },
-  {
-    key: 'feedback',
-    label: 'Feedback',
-    path: '/feedback',
-    title: 'Feedback',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-      </svg>
-    ),
-  },
 ];
+
+const feedbackNavItem = {
+  key: 'feedback',
+  label: 'Feedback',
+  path: '/feedback',
+  title: 'Feedback',
+  icon: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  ),
+};
 
 const regulatorNavItems = [
   {
@@ -171,12 +185,67 @@ const regulatorNavItems = [
   },
 ];
 
+const analyzerNavItems = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    path: '/analyzer/home',
+    title: 'Dashboard',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    ),
+  },
+  {
+    key: 'agent',
+    label: 'Analysis Agent',
+    path: '/analyzer/agent',
+    title: 'Analysis Agent',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+    ),
+  },
+  {
+    key: 'history',
+    label: 'Analysis History',
+    path: '/analyzer/history',
+    title: 'Analysis History',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    ),
+  },
+  {
+    key: 'knowledge',
+    label: 'Knowledge Center',
+    path: '/analyzer/knowledge',
+    title: 'Knowledge Center',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+      </svg>
+    ),
+  },
+];
+
 function Layout({ children, onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { selectedAgent, setSelectedAgent, clearSelectedAgent } = useAgent();
   const [isCollapsed, setIsCollapsed] = useState(() => {
     // Collapse sidebar by default on home page
-    return location.pathname === '/home' || location.pathname === '/';
+    return location.pathname === '/home' || location.pathname === '/analyzer/home' || location.pathname === '/';
   });
   const [activeMenu, setActiveMenu] = useState(() => getMenuKeyFromPath(location.pathname));
   const [portalMode, setPortalMode] = useState(() => {
@@ -195,8 +264,6 @@ function Layout({ children, onLogout }) {
   const [otpTimer, setOtpTimer] = useState(120);
   const [userEmail, setUserEmail] = useState('');
   const otpTimerIntervalRef = useRef(null);
-<<<<<<< HEAD
-=======
   
   // Password creation state
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -207,11 +274,43 @@ function Layout({ children, onLogout }) {
   const [passwordError, setPasswordError] = useState('');
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
->>>>>>> dev
+  const [expandedSections, setExpandedSections] = useState({
+    compliance: selectedAgent === 'compliance',
+    analyzer: selectedAgent === 'analyzer',
+  });
 
-  const handleMenuClick = (menuItem, path) => {
+  const complianceNavItems = portalMode === 'Regulator' ? regulatorNavItems : enterpriseNavItems;
+
+  const toggleSection = (section) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const isNavItemActive = (item) => {
+    if (item.path === '/home') {
+      return location.pathname === '/home';
+    }
+    if (item.path === '/analyzer/home') {
+      return location.pathname === '/analyzer/home';
+    }
+    return location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
+  };
+
+  const handleAgentMenuClick = (agent, menuItem, path) => {
+    setSelectedAgent(agent);
     setActiveMenu(menuItem);
+    setExpandedSections((prev) => ({
+      ...prev,
+      [agent]: true,
+    }));
     navigate(path);
+  };
+
+  const handleFeedbackClick = () => {
+    setActiveMenu('feedback');
+    navigate('/feedback');
   };
 
   const toggleSidebar = () => {
@@ -219,16 +318,7 @@ function Layout({ children, onLogout }) {
   };
 
   const handleLogoutClick = () => {
-<<<<<<< HEAD
-    try {
-      localStorage.removeItem('ai_agent_chat_history');
-    } catch (error) {
-      console.error('Failed to clear AI agent chat history', error);
-    }
-=======
-    // Don't clear chat history - it's stored in backend now and persists across logouts
-    // localStorage.removeItem('ai_agent_chat_history');
->>>>>>> dev
+    clearSelectedAgent();
     if (onLogout) {
       onLogout();
     }
@@ -236,12 +326,37 @@ function Layout({ children, onLogout }) {
   };
 
   useEffect(() => {
+    if (selectedAgent) return;
+    if (location.pathname.startsWith('/analyzer')) {
+      setSelectedAgent('analyzer');
+    } else if (
+      location.pathname.startsWith('/home') ||
+      location.pathname.startsWith('/upload') ||
+      location.pathname.startsWith('/validation') ||
+      location.pathname.startsWith('/rkb') ||
+      location.pathname.startsWith('/feedback') ||
+      location.pathname.startsWith('/regulator') ||
+      location.pathname.startsWith('/regulation')
+    ) {
+      setSelectedAgent('compliance');
+    }
+  }, [location.pathname, selectedAgent, setSelectedAgent]);
+
+  useEffect(() => {
+    if (!selectedAgent) return;
+    setExpandedSections({
+      compliance: selectedAgent === 'compliance',
+      analyzer: selectedAgent === 'analyzer',
+    });
+  }, [selectedAgent]);
+
+  useEffect(() => {
     localStorage.setItem('portal_mode', portalMode);
   }, [portalMode]);
 
   // Update sidebar state when navigating to/from home page
   useEffect(() => {
-    const isHomePage = location.pathname === '/home' || location.pathname === '/';
+    const isHomePage = location.pathname === '/home' || location.pathname === '/analyzer/home' || location.pathname === '/';
     setIsCollapsed(isHomePage);
   }, [location.pathname]);
 
@@ -273,8 +388,6 @@ function Layout({ children, onLogout }) {
     };
   }, []);
 
-<<<<<<< HEAD
-=======
   // Get current user email for display
   useEffect(() => {
     const userStr = localStorage.getItem('user');
@@ -288,7 +401,6 @@ function Layout({ children, onLogout }) {
     }
   }, []);
 
->>>>>>> dev
   // Check if user needs email verification
   useEffect(() => {
     const userStr = localStorage.getItem('user');
@@ -300,34 +412,11 @@ function Layout({ children, onLogout }) {
           setUserEmail(user.email);
           setShowVerificationModal(true);
           setOtpTimer(120);
-<<<<<<< HEAD
-          // Start timer
-          if (otpTimerIntervalRef.current) {
-            clearInterval(otpTimerIntervalRef.current);
-          }
-          otpTimerIntervalRef.current = setInterval(() => {
-            setOtpTimer((prev) => {
-              if (prev <= 1) {
-                if (otpTimerIntervalRef.current) {
-                  clearInterval(otpTimerIntervalRef.current);
-                  otpTimerIntervalRef.current = null;
-                }
-                return 0;
-              }
-              return prev - 1;
-            });
-          }, 1000);
-=======
->>>>>>> dev
         }
       } catch (error) {
         console.error('Error parsing user data:', error);
       }
     }
-<<<<<<< HEAD
-    
-    // Cleanup timer on unmount
-=======
   }, [location.pathname, showVerificationModal]);
 
   // Start OTP timer when verification modal is shown
@@ -351,18 +440,13 @@ function Layout({ children, onLogout }) {
     }
     
     // Cleanup timer on unmount or when modal closes
->>>>>>> dev
     return () => {
       if (otpTimerIntervalRef.current) {
         clearInterval(otpTimerIntervalRef.current);
         otpTimerIntervalRef.current = null;
       }
     };
-<<<<<<< HEAD
-  }, [location.pathname, showVerificationModal]);
-=======
   }, [showVerificationModal]);
->>>>>>> dev
 
   const startOTPTimer = () => {
     if (otpTimerIntervalRef.current) {
@@ -402,12 +486,6 @@ function Layout({ children, onLogout }) {
       const response = await apiService.verifyOTP(userEmail, otpCode);
       // Update user in localStorage
       localStorage.setItem('user', JSON.stringify(response.user));
-<<<<<<< HEAD
-      setShowVerificationModal(false);
-      setOtpCode('');
-      // Reload page to reflect verified status
-      window.location.reload();
-=======
       setCurrentUser(response.user);
       setShowVerificationModal(false);
       setOtpCode('');
@@ -419,7 +497,6 @@ function Layout({ children, onLogout }) {
         // Reload page to reflect verified status
         window.location.reload();
       }
->>>>>>> dev
     } catch (err) {
       setVerificationError(err.message || 'OTP verification failed');
     } finally {
@@ -427,8 +504,6 @@ function Layout({ children, onLogout }) {
     }
   };
 
-<<<<<<< HEAD
-=======
   const validatePassword = (pwd) => {
     const checks = {
       length: pwd.length >= 8,
@@ -470,7 +545,6 @@ function Layout({ children, onLogout }) {
     }
   };
 
->>>>>>> dev
   const handleResendOTP = async () => {
     if (otpResendCount >= 5) {
       setVerificationError('Maximum resend attempts reached. Please contact support.');
@@ -492,13 +566,54 @@ function Layout({ children, onLogout }) {
     }
   };
 
-  const navItems = portalMode === 'Regulator' ? regulatorNavItems : enterpriseNavItems;
-
   const handlePortalSwitch = (mode) => {
     if (mode !== portalMode) {
       setPortalMode(mode);
     }
     setIsProfileMenuOpen(false);
+  };
+
+  const renderAgentSection = (agentKey, title, items) => {
+    const isExpanded = expandedSections[agentKey];
+    const isActiveAgent = selectedAgent === agentKey;
+
+    return (
+      <div
+        key={agentKey}
+        className={`agent-nav-section ${isActiveAgent ? 'active-agent-section' : ''}`}
+      >
+        <button
+          type="button"
+          className="agent-section-header"
+          onClick={() => toggleSection(agentKey)}
+          title={title}
+          aria-expanded={isExpanded}
+        >
+          <span className={`agent-section-chevron ${isExpanded ? 'expanded' : ''}`}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </span>
+          {!isCollapsed && <span className="agent-section-title">{title}</span>}
+        </button>
+        {isExpanded && (
+          <div className="agent-section-items">
+            {items.map((item) => (
+              <button
+                key={`${agentKey}-${item.key}`}
+                type="button"
+                className={`nav-item nav-item-nested ${isNavItemActive(item) ? 'active' : ''}`}
+                onClick={() => handleAgentMenuClick(agentKey, item.key, item.path)}
+                title={item.title}
+              >
+                {item.icon}
+                {!isCollapsed && <span>{item.label}</span>}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -522,17 +637,19 @@ function Layout({ children, onLogout }) {
         </div>
         
         <nav className="sidebar-nav">
-          {navItems.map((item) => (
+          {renderAgentSection('compliance', 'Compliance Agent', complianceNavItems)}
+          {renderAgentSection('analyzer', 'Analyzer Agent', analyzerNavItems)}
+          <div className="sidebar-standalone-nav">
             <button
-              key={item.key}
-              className={`nav-item ${activeMenu === item.key ? 'active' : ''}`}
-              onClick={() => handleMenuClick(item.key, item.path)}
-              title={item.title}
+              type="button"
+              className={`nav-item ${isNavItemActive(feedbackNavItem) ? 'active' : ''}`}
+              onClick={handleFeedbackClick}
+              title={feedbackNavItem.title}
             >
-              {item.icon}
-              {!isCollapsed && <span>{item.label}</span>}
+              {feedbackNavItem.icon}
+              {!isCollapsed && <span>{feedbackNavItem.label}</span>}
             </button>
-          ))}
+          </div>
         </nav>
       </aside>
 
@@ -542,14 +659,10 @@ function Layout({ children, onLogout }) {
         <header className="top-header">
           <div className="header-left">
             <div className="header-logo-text">
-<<<<<<< HEAD
-              <div className="header-logo-main">LODR AI Agent</div>
-=======
               <div className="header-logo-main">IRIS RegAI</div>
               <p className="header-logo-subtitle">
                 Smart, Regulatory AI engine for continuous monitoring and early warning system on non-compliance
               </p>
->>>>>>> dev
             </div>
           </div>
           <div className="header-right">
@@ -579,11 +692,7 @@ function Layout({ children, onLogout }) {
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-<<<<<<< HEAD
-                <span>Admin</span>
-=======
                 <span>{currentUser?.email || 'Admin'}</span>
->>>>>>> dev
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -600,19 +709,15 @@ function Layout({ children, onLogout }) {
                   >
                     Profile
                   </button>
-                  <button
-                    type="button"
-                    className="user-dropdown-item"
-                    onClick={() => handlePortalSwitch(portalMode === 'Enterprise' ? 'Regulator' : 'Enterprise')}
-                  >
-                    {portalMode === 'Enterprise' ? 'Switch to Regulator view' : 'Switch to Enterprise view'}
-                  </button>
-<<<<<<< HEAD
-                  <button type="button" className="user-dropdown-item" onClick={handleLogoutClick}>
-                    Logout
-                  </button>
-=======
->>>>>>> dev
+                  {selectedAgent === 'compliance' && (
+                    <button
+                      type="button"
+                      className="user-dropdown-item"
+                      onClick={() => handlePortalSwitch(portalMode === 'Enterprise' ? 'Regulator' : 'Enterprise')}
+                    >
+                      {portalMode === 'Enterprise' ? 'Switch to Regulator view' : 'Switch to Enterprise view'}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -721,8 +826,6 @@ function Layout({ children, onLogout }) {
           </div>
         </div>
       )}
-<<<<<<< HEAD
-=======
       
       {/* Password Creation Modal */}
       {showPasswordModal && (
@@ -876,7 +979,6 @@ function Layout({ children, onLogout }) {
           </div>
         </div>
       )}
->>>>>>> dev
       </div>
     </PortalModeContext.Provider>
   );

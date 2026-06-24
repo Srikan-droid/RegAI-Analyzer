@@ -1,23 +1,14 @@
-<<<<<<< HEAD
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-=======
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://20.193.250.79:8001';
->>>>>>> dev
 
 class ApiService {
   constructor() {
     this.token = localStorage.getItem('access_token');
     this.refreshTimer = null;
     this.inactivityTimer = null;
-<<<<<<< HEAD
-    this.lastActivity = Date.now();
-    this.INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
-=======
     this.warningTimer = null;
     this.lastActivity = Date.now();
     this.INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
     this.WARNING_TIME = 14 * 60 * 1000; // 14 minutes - show warning 1 minute before
->>>>>>> dev
   }
 
   setToken(token) {
@@ -37,11 +28,8 @@ class ApiService {
     this.token = null;
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
-<<<<<<< HEAD
-=======
     // Dispatch custom event to notify components of logout
     window.dispatchEvent(new Event('userLogout'));
->>>>>>> dev
   }
 
   updateActivity() {
@@ -53,9 +41,6 @@ class ApiService {
     if (this.inactivityTimer) {
       clearTimeout(this.inactivityTimer);
     }
-<<<<<<< HEAD
-
-=======
     if (this.warningTimer) {
       clearTimeout(this.warningTimer);
     }
@@ -66,19 +51,11 @@ class ApiService {
     }, this.WARNING_TIME);
     
     // Set logout timer (15 minutes)
->>>>>>> dev
     this.inactivityTimer = setTimeout(() => {
       this.handleInactivityTimeout();
     }, this.INACTIVITY_TIMEOUT);
   }
 
-<<<<<<< HEAD
-  handleInactivityTimeout() {
-    this.clearToken();
-    if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
-      window.location.href = '/login';
-    }
-=======
   showInactivityWarning() {
     // Show alert/modal warning user
     const userConfirmed = window.confirm(
@@ -95,7 +72,6 @@ class ApiService {
     this.clearToken();
     // Redirect to login page
     window.location.href = 'http://20.193.250.79:3000/';
->>>>>>> dev
   }
 
   setupActivityListeners() {
@@ -133,13 +109,8 @@ class ApiService {
       }
 
       if (!response.ok) {
-<<<<<<< HEAD
-        const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
-        throw new Error(error.detail || 'Request failed');
-=======
         const error = await response.json().catch(() => ({ detail: 'An error occurred', error: 'An error occurred' }));
         throw new Error(error.error || error.detail || 'Request failed');
->>>>>>> dev
       }
 
       return await response.json();
@@ -156,13 +127,10 @@ class ApiService {
       body: JSON.stringify({ email, password }),
     });
     this.setToken(response.access_token);
-<<<<<<< HEAD
-=======
     if (response.refresh_token) {
       localStorage.setItem('refresh_token', response.refresh_token);
       this.refreshTokenValue = response.refresh_token;
     }
->>>>>>> dev
     localStorage.setItem('user', JSON.stringify(response.user));
     return response;
   }
@@ -173,13 +141,10 @@ class ApiService {
       body: JSON.stringify({ code }),
     });
     this.setToken(response.access_token);
-<<<<<<< HEAD
-=======
     if (response.refresh_token) {
       localStorage.setItem('refresh_token', response.refresh_token);
       this.refreshTokenValue = response.refresh_token;
     }
->>>>>>> dev
     localStorage.setItem('user', JSON.stringify(response.user));
     return response;
   }
@@ -190,13 +155,10 @@ class ApiService {
       body: JSON.stringify({ email, name }),
     });
     this.setToken(response.access_token);
-<<<<<<< HEAD
-=======
     if (response.refresh_token) {
       localStorage.setItem('refresh_token', response.refresh_token);
       this.refreshTokenValue = response.refresh_token;
     }
->>>>>>> dev
     localStorage.setItem('user', JSON.stringify(response.user));
     return response;
   }
@@ -207,13 +169,10 @@ class ApiService {
       body: JSON.stringify({ email, otp_code: otpCode }),
     });
     this.setToken(response.access_token);
-<<<<<<< HEAD
-=======
     if (response.refresh_token) {
       localStorage.setItem('refresh_token', response.refresh_token);
       this.refreshTokenValue = response.refresh_token;
     }
->>>>>>> dev
     localStorage.setItem('user', JSON.stringify(response.user));
     return response;
   }
@@ -231,12 +190,6 @@ class ApiService {
   }
 
   async refreshToken() {
-<<<<<<< HEAD
-    const response = await this.request('/users/refresh-token', {
-      method: 'POST',
-    });
-    this.setToken(response.access_token);
-=======
     const refreshToken = localStorage.getItem('refresh_token');
     if (!refreshToken) {
       throw new Error('No refresh token available');
@@ -255,7 +208,6 @@ class ApiService {
         this.refreshTokenValue = response.refresh;
       }
     }
->>>>>>> dev
     return response;
   }
 
@@ -270,8 +222,6 @@ class ApiService {
       body: JSON.stringify({ password, confirm_password: confirmPassword }),
     });
   }
-<<<<<<< HEAD
-=======
 
   async resetPassword(oldPassword, newPassword, confirmPassword) {
     return await this.request('/users/me/reset-password', {
@@ -703,7 +653,6 @@ class ApiService {
       throw error;
     }
   }
->>>>>>> dev
 }
 
 export default new ApiService();

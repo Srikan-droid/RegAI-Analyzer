@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { initialDisclosures, REGULATION_OPTIONS } from '../data/disclosures';
-import { generateRuleResults, normalizeRuleResults } from '../utils/ruleUtils';
-=======
 import React, { createContext, useContext, useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { initialDisclosures, REGULATION_OPTIONS } from '../data/disclosures';
 import { generateRuleResults, normalizeRuleResults } from '../utils/ruleUtils';
 import apiService from '../services/api';
->>>>>>> dev
 
 const STORAGE_KEY = 'lodr_disclosures';
 const LAST_UPLOAD_KEY = 'lodr_last_upload';
@@ -72,8 +66,6 @@ const getComplianceStatus = (score) => {
 
 export const DisclosuresProvider = ({ children }) => {
   const [disclosures, setDisclosures] = useState(loadInitialDisclosures);
-<<<<<<< HEAD
-=======
   const [isLoading, setIsLoading] = useState(false);
   const pollingIntervalsRef = React.useRef(new Map()); // Track polling intervals for each document
   const pollingAttemptsRef = React.useRef(new Map()); // Track polling attempts for completed documents without scores
@@ -133,7 +125,6 @@ export const DisclosuresProvider = ({ children }) => {
       loadDisclosuresFromBackend();
     }
   }, []);
->>>>>>> dev
 
   useEffect(() => {
     try {
@@ -143,9 +134,6 @@ export const DisclosuresProvider = ({ children }) => {
     }
   }, [disclosures]);
 
-<<<<<<< HEAD
-  const addDisclosure = ({ announcementTitle, dateOfEvent, fileName }) => {
-=======
   // Background polling for processing documents - continues even when user navigates away
   useEffect(() => {
     // Check if user is authenticated before starting polling
@@ -583,7 +571,6 @@ export const DisclosuresProvider = ({ children }) => {
   }, [disclosures]);
 
   const addDisclosure = ({ announcementTitle, dateOfEvent, fileName, documentId, requestId, status, complianceScore, resultData }) => {
->>>>>>> dev
     // Save last upload data for quick upload pre-filling
     try {
       localStorage.setItem(LAST_UPLOAD_KEY, JSON.stringify({ announcementTitle, dateOfEvent }));
@@ -591,10 +578,6 @@ export const DisclosuresProvider = ({ children }) => {
       console.error('Failed to save last upload data', error);
     }
 
-<<<<<<< HEAD
-    const newEntry = {
-      id: Date.now(),
-=======
     // Map backend status to frontend status
     const mapStatus = (backendStatus) => {
       switch (backendStatus) {
@@ -631,34 +614,10 @@ export const DisclosuresProvider = ({ children }) => {
 
     const newEntry = {
       id: documentId || Date.now(),
->>>>>>> dev
       announcementTitle,
       dateOfEvent,
       uploadedDate: new Date().toISOString().split('T')[0],
       regulations: getRandomRegulations(),
-<<<<<<< HEAD
-      complianceScore: null,
-      complianceStatus: 'Pending Review',
-      fileStatus: 'Processing',
-      fileName,
-      ruleResults: [],
-    };
-
-    // Generate rule results first, then calculate score based on pass/fail ratio
-    const { ruleResults, calculatedScore } = generateRuleResults();
-    const complianceScore = calculatedScore;
-    const completedEntry = {
-      ...newEntry,
-      fileStatus: 'Completed',
-      complianceScore,
-      complianceStatus: getComplianceStatus(complianceScore),
-      ruleResults,
-    };
-
-    setDisclosures((prev) => [completedEntry, ...prev]);
-
-    return { id: newEntry.id, complianceScore };
-=======
       complianceScore: complianceScore || null,
       complianceStatus: complianceScore != null ? getComplianceStatus(complianceScore) : 'Pending Review',
       fileStatus: status ? mapStatus(status) : 'Processing',
@@ -725,7 +684,6 @@ export const DisclosuresProvider = ({ children }) => {
       }
       console.error('Failed to load disclosures from backend:', error);
     }
->>>>>>> dev
   };
 
   const sortedDisclosures = useMemo(
@@ -751,11 +709,8 @@ export const DisclosuresProvider = ({ children }) => {
         disclosures: sortedDisclosures,
         addDisclosure,
         getLastUploadData,
-<<<<<<< HEAD
-=======
         loadDisclosuresFromBackend,
         isLoading,
->>>>>>> dev
       }}
     >
       {children}

@@ -1,35 +1,3 @@
-<<<<<<< HEAD
-import React, { useMemo } from 'react';
-import './DisclosureDetailsModal.css';
-import { formatDisplayDate } from '../data/disclosures';
-import { generateRuleResults } from '../utils/ruleUtils';
-import { findRuleMetadata } from '../constants/validationRules';
-
-function DisclosureDetailsModal({ disclosure, onClose }) {
-  const derivedRules = useMemo(() => {
-    if (!disclosure) {
-      return [];
-    }
-
-    const { complianceScore, ruleResults = [] } = disclosure;
-    if (ruleResults.length) {
-      return ruleResults;
-    }
-    if (complianceScore != null) {
-      const { ruleResults: generatedRules } = generateRuleResults(complianceScore);
-      return generatedRules;
-    }
-    return [];
-  }, [disclosure]);
-
-  if (!disclosure) {
-    return null;
-  }
-
-  const { announcementTitle, dateOfEvent, complianceScore, regulations = [] } = disclosure;
-  const scoreClass =
-    complianceScore != null ? `compliance-score ${getScoreIndicatorClass(complianceScore)}` : '';
-=======
 import React from 'react';
 import './DisclosureDetailsModal.css';
 import { formatDisplayDate } from '../data/disclosures';
@@ -207,22 +175,15 @@ function DisclosureDetailsModal({ documentData, onClose }) {
   }
 
   const scoreClass = compliance_score != null ? `compliance-score ${getScoreIndicatorClass(compliance_score)}` : '';
->>>>>>> dev
 
   return (
     <div className="disclosure-modal-overlay" onClick={onClose}>
       <div className="disclosure-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="disclosure-modal-header">
           <div>
-<<<<<<< HEAD
-            <h3>{announcementTitle}</h3>
-            <p className="disclosure-meta">
-              Date: <span>{formatDisplayDate(dateOfEvent)}</span> • Source: <span>Upload</span>
-=======
             <h3>{announcement_title}</h3>
             <p className="disclosure-meta">
               Date: <span>{date_of_event ? formatDisplayDate(date_of_event) : '-'}</span> • Source: <span>Upload</span>
->>>>>>> dev
             </p>
           </div>
           <button className="disclosure-modal-close" onClick={onClose} aria-label="Close dialog">
@@ -237,24 +198,15 @@ function DisclosureDetailsModal({ documentData, onClose }) {
           <div>
             <span className="summary-label">Compliance Score</span>
             <div className={`summary-value ${scoreClass}`}>
-<<<<<<< HEAD
-              {complianceScore != null ? `${complianceScore}%` : '-'}
-=======
               {compliance_score != null ? `${typeof compliance_score === 'number' ? compliance_score.toFixed(2) : parseFloat(compliance_score || 0).toFixed(2)}%` : '-'}
->>>>>>> dev
             </div>
           </div>
           <div>
             <span className="summary-label">Regulations</span>
             <div className="regulation-pill-container">
               {regulations.length ? (
-<<<<<<< HEAD
-                regulations.map((reg) => (
-                  <span key={reg} className="regulation-pill">
-=======
                 regulations.map((reg, index) => (
                   <span key={index} className="regulation-pill">
->>>>>>> dev
                     {reg}
                   </span>
                 ))
@@ -268,47 +220,20 @@ function DisclosureDetailsModal({ documentData, onClose }) {
         <div className="rule-section">
           <div className="rule-section-header">
             <h4>Rules Validated</h4>
-<<<<<<< HEAD
-            <span className="rule-count">{derivedRules.length || 0} checks</span>
-          </div>
-          {derivedRules.length ? (
-=======
             <span className="rule-count">{rules.length || 0} checks</span>
           </div>
           {rules.length > 0 ? (
->>>>>>> dev
             <table className="rule-table">
               <thead>
                 <tr>
                   <th>Rule ID</th>
-<<<<<<< HEAD
-                  <th>Rule Description</th>
-                  <th>Extracted Evidence</th>
-=======
                   <th>Message</th>
                   <th>Extracted Data</th>
                   <th>Score</th>
->>>>>>> dev
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
-                {derivedRules.map((rule) => {
-                  const ruleIdLabel = getRuleIdLabel(rule);
-                  return (
-                    <tr key={rule.id}>
-                      <td className="rule-id-cell">
-                        {ruleIdLabel ? <span className="rule-id-pill">{ruleIdLabel}</span> : '—'}
-                      </td>
-                      <td>
-                        <span className="rule-name">{rule.name}</span>
-                      </td>
-                      <td>{rule.detail || 'Context extracted from PDF submission'}</td>
-                      <td>
-                        <span className={`rule-status ${rule.status.toLowerCase()}`}>
-                          {rule.status}
-=======
                 {rules.map((rule, index) => {
                   const ruleId = rule.rule_id || '';
                   const isCRRule = ruleId.startsWith('CR_');
@@ -333,7 +258,6 @@ function DisclosureDetailsModal({ documentData, onClose }) {
                       <td>
                         <span className={`rule-status ${getRuleStatusClass(rule.validation_status)}`}>
                           {statusText}
->>>>>>> dev
                         </span>
                       </td>
                     </tr>
@@ -345,8 +269,6 @@ function DisclosureDetailsModal({ documentData, onClose }) {
             <div className="rule-empty-state">Validation results will appear once processing ends.</div>
           )}
         </div>
-<<<<<<< HEAD
-=======
 
         {/* AI Recommendation section */}
         {(recommendations.length > 0 || shouldShowLoading) && (
@@ -392,31 +314,16 @@ function DisclosureDetailsModal({ documentData, onClose }) {
             ) : null}
           </div>
         )}
->>>>>>> dev
       </div>
     </div>
   );
 }
 
-<<<<<<< HEAD
-export default DisclosureDetailsModal;
-
-const getRuleIdLabel = (rule) => {
-  if (!rule) return '';
-  if (rule.ruleId) return rule.ruleId;
-  const metadata = findRuleMetadata(rule.ruleId || rule.name || rule.check);
-  return metadata?.id || '';
-};
-
-=======
->>>>>>> dev
 const getScoreIndicatorClass = (score) => {
   if (score >= 80) return 'score-good';
   if (score >= 50) return 'score-warning';
   return 'score-poor';
 };
-<<<<<<< HEAD
-=======
 
 const getRuleStatusClass = (status) => {
   if (status === 'SUCCESS') return 'pass';
@@ -425,4 +332,3 @@ const getRuleStatusClass = (status) => {
 };
 
 export default DisclosureDetailsModal;
->>>>>>> dev

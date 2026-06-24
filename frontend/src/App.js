@@ -14,6 +14,12 @@ import RegulatorReview from './pages/regulator/Review';
 import EntityMaster from './pages/regulator/EntityMaster';
 import Profile from './Profile';
 import apiService from './services/api';
+import { AgentProvider } from './context/AgentContext';
+import AgentPicker from './pages/AgentPicker';
+import AnalyzerDashboard from './pages/analyzer/AnalyzerDashboard';
+import AnalysisAgent from './pages/analyzer/AnalysisAgent';
+import AnalysisHistory from './pages/analyzer/AnalysisHistory';
+import AnalyzerKnowledgeCenter from './pages/analyzer/AnalyzerKnowledgeCenter';
 
 // Sample SEBI Regulations Data - Updated links
 const regulationsData = [
@@ -252,8 +258,6 @@ const regulationsData = [
         keywords: ['corporate action', 'dividend', 'bonus']
       }
     ]
-<<<<<<< HEAD
-=======
   },
   {
     id: 2,
@@ -302,7 +306,6 @@ const regulationsData = [
         ]
       }
     ]
->>>>>>> dev
   }
 ];
 
@@ -386,12 +389,9 @@ function MainContent({ onLogout }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalText, setModalText] = useState('');
-<<<<<<< HEAD
-=======
   const [fetchedRegulations, setFetchedRegulations] = useState([]);
   const [loadingRegulations, setLoadingRegulations] = useState(false);
   const [regulationsError, setRegulationsError] = useState(null);
->>>>>>> dev
   
   // Load regulation and event from URL params
   useEffect(() => {
@@ -419,8 +419,6 @@ function MainContent({ onLogout }) {
     }
   }, [regulationId, eventId, searchParams]);
 
-<<<<<<< HEAD
-=======
   // Fetch credit rating table data from API when Credit Ratings event is selected
   useEffect(() => {
     // Check if selected event is Credit Ratings (id = 1)
@@ -467,7 +465,6 @@ function MainContent({ onLogout }) {
     }
   }, [selectedEvent]);
 
->>>>>>> dev
   // Filter regulations and events based on search query
   const filteredSearchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -553,11 +550,7 @@ function MainContent({ onLogout }) {
     input.onchange = (e) => {
       const file = e.target.files[0];
       if (file) {
-<<<<<<< HEAD
-        console.log('Uploading file for regulation:', reg.requirement, file.name);
-=======
         //console.log('Uploading file for regulation:', reg.requirement, file.name);
->>>>>>> dev
         // Add your upload logic here
         alert(`File "${file.name}" selected for upload for ${reg.requirement}`);
       }
@@ -566,11 +559,7 @@ function MainContent({ onLogout }) {
   };
 
   const handleGenerate = (reg) => {
-<<<<<<< HEAD
-    console.log('Generating document for regulation:', reg.requirement);
-=======
     //console.log('Generating document for regulation:', reg.requirement);
->>>>>>> dev
     // Add your generate logic here
     alert(`Generating document for ${reg.requirement}`);
   };
@@ -758,13 +747,8 @@ function MainContent({ onLogout }) {
                         <div 
                           key={event.id} 
                           className="event-card"
-<<<<<<< HEAD
-                          onClick={() => event.regulations && handleEventClick(selectedRegulation, event)}
-                          style={{ cursor: event.regulations ? 'pointer' : 'default' }}
-=======
                           onClick={() => (event.regulations || event.isStaticTable) && handleEventClick(selectedRegulation, event)}
                           style={{ cursor: (event.regulations || event.isStaticTable) ? 'pointer' : 'default' }}
->>>>>>> dev
                         >
                           <span className="event-category-badge">{event.category}</span>
                           <h4 className="event-name">{event.name}</h4>
@@ -776,11 +760,7 @@ function MainContent({ onLogout }) {
                               ))}
                             </div>
                           )}
-<<<<<<< HEAD
-                          {event.regulations && (
-=======
                           {(event.regulations || event.isStaticTable) && (
->>>>>>> dev
                             <span className="event-view-details">Click to view details →</span>
                           )}
                         </div>
@@ -789,11 +769,7 @@ function MainContent({ onLogout }) {
                   </div>
                 )}
                 
-<<<<<<< HEAD
-                {selectedEvent && selectedEvent.regulations && (
-=======
                 {selectedEvent && (selectedEvent.regulations || fetchedRegulations.length > 0 || selectedEvent.isStaticTable) && (
->>>>>>> dev
                   <div className="event-detail-view">
                     <button onClick={() => navigate(`/regulation/${selectedRegulation.id}`)} className="back-to-events-button">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -806,9 +782,6 @@ function MainContent({ onLogout }) {
                       <h3>{selectedEvent.name}</h3>
                       <p className="event-detail-subtitle">{selectedEvent.description}</p>
                     </div>
-<<<<<<< HEAD
-                    <div className="regulations-table">
-=======
                     {loadingRegulations && (
                       <div className="loading-message" style={{ padding: '20px', textAlign: 'center' }}>
                         Loading regulations...
@@ -842,7 +815,6 @@ function MainContent({ onLogout }) {
                       </div>
                     ) : (
                       <div className="regulations-table">
->>>>>>> dev
                       <table>
                         <thead>
                           <tr>
@@ -853,19 +825,12 @@ function MainContent({ onLogout }) {
                             <th>Format / Details</th>
                             <th>Validation Check</th>
                             <th>Penalty/Action</th>
-<<<<<<< HEAD
-=======
                             <th>Score</th>
->>>>>>> dev
                             <th>Source</th>
                           </tr>
                         </thead>
                         <tbody>
-<<<<<<< HEAD
-                          {selectedEvent.regulations.map((reg) => (
-=======
                           {(fetchedRegulations.length > 0 ? fetchedRegulations : selectedEvent.regulations || []).map((reg) => (
->>>>>>> dev
                             <tr key={reg.id}>
                               <td>{reg.regulation || 'N/A'}</td>
                               <td>{reg.typeOfEntity || 'N/A'}</td>
@@ -914,8 +879,6 @@ function MainContent({ onLogout }) {
                                   <span className="no-penalty">N/A</span>
                                 )}
                               </td>
-<<<<<<< HEAD
-=======
                               <td className="score-cell">
                                 {reg.score !== null && reg.score !== undefined ? (
                                   <span className="score-value">{reg.score}</span>
@@ -923,7 +886,6 @@ function MainContent({ onLogout }) {
                                   <span className="no-score">N/A</span>
                                 )}
                               </td>
->>>>>>> dev
                               <td className="source-cell">
                                 {reg.source ? (
                                   <a 
@@ -945,10 +907,7 @@ function MainContent({ onLogout }) {
                         </tbody>
                       </table>
                     </div>
-<<<<<<< HEAD
-=======
                     )}
->>>>>>> dev
                     {isModalOpen && (
                       <div className="modal-overlay" onClick={closeTextModal}>
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -1035,6 +994,7 @@ function App() {
 
   return (
     <DisclosuresProvider>
+      <AgentProvider>
       <Router>
         <Routes>
         <Route 
@@ -1044,6 +1004,16 @@ function App() {
         <Route 
           path="/login" 
           element={<Login onLogin={handleLogin} />} 
+        />
+        <Route
+          path="/choose-agent"
+          element={
+            isAuthenticated ? (
+              <AgentPicker />
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
         />
         <Route 
           path="/home" 
@@ -1189,8 +1159,57 @@ function App() {
             )
           }
         />
+        <Route
+          path="/analyzer/home"
+          element={
+            isAuthenticated ? (
+              <Layout onLogout={handleLogout}>
+                <AnalyzerDashboard />
+              </Layout>
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
+        />
+        <Route
+          path="/analyzer/agent"
+          element={
+            isAuthenticated ? (
+              <Layout onLogout={handleLogout}>
+                <AnalysisAgent />
+              </Layout>
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
+        />
+        <Route
+          path="/analyzer/history"
+          element={
+            isAuthenticated ? (
+              <Layout onLogout={handleLogout}>
+                <AnalysisHistory />
+              </Layout>
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
+        />
+        <Route
+          path="/analyzer/knowledge"
+          element={
+            isAuthenticated ? (
+              <Layout onLogout={handleLogout}>
+                <AnalyzerKnowledgeCenter />
+              </Layout>
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
+        />
         </Routes>
       </Router>
+      </AgentProvider>
     </DisclosuresProvider>
   );
 }

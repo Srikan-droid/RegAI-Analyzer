@@ -92,12 +92,6 @@ export const REGULATION_OPTIONS = [
 
 export const formatDisplayDate = (isoDate) => {
   if (!isoDate) return '';
-<<<<<<< HEAD
-  const [year, month, day] = isoDate.split('-');
-  return `${day}/${month}/${year}`;
-};
-
-=======
   
   // Handle both date strings (YYYY-MM-DD) and datetime strings (YYYY-MM-DDTHH:mm:ss...)
   let dateStr = isoDate;
@@ -137,4 +131,3 @@ export const formatDisplayDateTime = (isoDateTime) => {
   }
 };
 
->>>>>>> dev

@@ -1,52 +1,15 @@
-<<<<<<< HEAD
-import React, { useMemo, useState } from 'react';
-=======
 import React, { useMemo, useState, useEffect, useCallback, startTransition } from 'react';
->>>>>>> dev
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { formatDisplayDate } from './data/disclosures';
 import { useDisclosures } from './context/DisclosuresContext';
 import { usePortalMode } from './context/PortalModeContext';
-<<<<<<< HEAD
-=======
 import apiService from './services/api';
->>>>>>> dev
 
 function Dashboard() {
   const { disclosures } = useDisclosures();
   const navigate = useNavigate();
   const { portalMode } = usePortalMode();
-<<<<<<< HEAD
-
-  const latestDisclosures = useMemo(() => disclosures.slice(0, 5), [disclosures]);
-
-  const metrics = useMemo(() => {
-    const totalAnnouncements = disclosures.length;
-    let scoreAbove80 = 0;
-    let scoreBetween50And80 = 0;
-    let scoreBelow50 = 0;
-
-    disclosures.forEach((item) => {
-      if (item.complianceScore == null) return;
-
-      if (item.complianceScore >= 80) {
-        scoreAbove80 += 1;
-      } else if (item.complianceScore >= 50) {
-        scoreBetween50And80 += 1;
-      } else {
-        scoreBelow50 += 1;
-      }
-    });
-
-    return {
-      totalAnnouncements,
-      scoreAbove80,
-      scoreBetween50And80,
-      scoreBelow50,
-    };
-  }, [disclosures]);
-=======
   const [complianceMetrics, setComplianceMetrics] = useState({
     total_announcements: 0,
     compliance_metrics: {
@@ -184,7 +147,6 @@ function Dashboard() {
       scoreBelow50: complianceMetrics.compliance_metrics.below_50,
     };
   }, [complianceMetrics]);
->>>>>>> dev
 
   if (portalMode === 'Regulator') {
     return <RegulatorDashboard />;
@@ -241,65 +203,6 @@ function Dashboard() {
       <div className="latest-disclosures-section">
         <h2 className="section-title">Latest Disclosures</h2>
         <div className="disclosures-table-container">
-<<<<<<< HEAD
-          <table className="disclosures-table">
-            <thead>
-              <tr>
-                <th>Announcement Title</th>
-                <th>Date of Event</th>
-                <th>Regulations</th>
-                <th>Status</th>
-                <th>Compliance Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {latestDisclosures.map((item) => {
-                const showScore = item.fileStatus === 'Completed' && item.complianceScore != null;
-                const isClickable = item.fileStatus === 'Completed';
-                // Generate dummy data if missing
-                const displayTitle = item.announcementTitle || `Disclosure - ${item.fileName?.replace('.pdf', '') || 'Document'}`;
-                const displayDate = item.dateOfEvent || new Date().toISOString().split('T')[0];
-                return (
-                  <tr key={item.id}>
-                    <td>
-                      <button
-                        className={`disclosure-link ${!isClickable ? 'disabled' : ''}`}
-                        onClick={() => isClickable && navigate(`/validation/${item.id}`, { state: { from: 'dashboard' } })}
-                        disabled={!isClickable}
-                      >
-                        {displayTitle}
-                      </button>
-                    </td>
-                    <td>{formatDisplayDate(displayDate)}</td>
-                    <td>
-                      {item.regulations.map((reg) => (
-                        <span key={reg} className="regulation-tag">
-                          {reg}
-                        </span>
-                      ))}
-                    </td>
-                    <td>
-                      <span className={`status-badge ${getStatusClass(item.fileStatus)}`}>
-                        {item.fileStatus}
-                      </span>
-                    </td>
-                    <td>
-                      {showScore ? (
-                        <span className="compliance-score">
-                          <span className={`score-indicator ${getScoreIndicatorClass(item.complianceScore)}`} />
-                          {item.complianceScore}%
-                        </span>
-                      ) : (
-                        '-'
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-=======
           {loading ? (
             <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>
           ) : (
@@ -404,7 +307,6 @@ function Dashboard() {
             </button>
           </div>
         )}
->>>>>>> dev
       </div>
     </div>
   );
@@ -412,16 +314,6 @@ function Dashboard() {
 
 const getStatusClass = (status) => {
   switch (status) {
-<<<<<<< HEAD
-    case 'Completed':
-      return 'status-completed';
-    case 'Processing':
-      return 'status-processing';
-    case 'Pending':
-      return 'status-pending';
-    case 'Error':
-      return 'status-error';
-=======
     case 'COMPLETED':
     case 'Completed':
       return 'status-completed';
@@ -435,7 +327,6 @@ const getStatusClass = (status) => {
     case 'Error':
       return 'status-error';
     case 'CANCELLED':
->>>>>>> dev
     case 'Cancelled':
       return 'status-cancelled';
     default:
