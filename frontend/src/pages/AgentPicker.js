@@ -46,8 +46,8 @@ function AgentPicker() {
                 <path d="m21 21-4.35-4.35"></path>
               </svg>
             </div>
-            <h2>Analyzer Agent</h2>
-            <p>Run deep analysis on filings, explore patterns, and review analysis history.</p>
+            <h2>Insight Agent</h2>
+            <p>Run deep insights on filings, explore patterns, and review analysis history.</p>
             <span className="agent-picker-cta">Continue →</span>
           </button>
         </div>

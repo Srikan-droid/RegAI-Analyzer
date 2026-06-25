@@ -638,7 +638,7 @@ function Layout({ children, onLogout }) {
         
         <nav className="sidebar-nav">
           {renderAgentSection('compliance', 'Compliance Agent', complianceNavItems)}
-          {renderAgentSection('analyzer', 'Analyzer Agent', analyzerNavItems)}
+          {renderAgentSection('analyzer', 'Insight Agent', analyzerNavItems)}
           <div className="sidebar-standalone-nav">
             <button
               type="button"
