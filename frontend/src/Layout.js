@@ -9,8 +9,8 @@ const getMenuKeyFromPath = (path) => {
   if (path === '/analyzer/home') {
     return 'dashboard';
   }
-  if (path.startsWith('/analyzer/agent')) {
-    return 'agent';
+  if (path.startsWith('/analyzer/insight')) {
+    return 'insight';
   }
   if (path.startsWith('/analyzer/history')) {
     return 'history';
@@ -199,10 +199,10 @@ const analyzerNavItems = [
     ),
   },
   {
-    key: 'agent',
-    label: 'Analysis Agent',
-    path: '/analyzer/agent',
-    title: 'Analysis Agent',
+    key: 'insight',
+    label: 'Insight Agent',
+    path: '/analyzer/insight',
+    title: 'Insight Agent',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>

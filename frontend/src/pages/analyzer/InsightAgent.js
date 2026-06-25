@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import '../../UploadDisclosure.css';
 
-function AnalysisAgent() {
+function InsightAgent() {
   const [questionInput, setQuestionInput] = useState('');
   const [messages] = useState([
-    { role: 'assistant', text: 'Welcome to the Analyzer Agent. Upload a document or ask a question to begin analysis. (Prototype — no backend connected.)' },
+    { role: 'assistant', text: 'Welcome to the Insight Agent. Upload a document or ask a question to begin. (Prototype — no backend connected.)' },
   ]);
 
   return (
     <div className="upload-disclosure-page">
       <div className="upload-header">
-        <h1 className="upload-title">Analysis Agent</h1>
-        <p className="upload-subtitle">Upload filings and interact with the analysis assistant</p>
+        <h1 className="upload-title">Insight Agent</h1>
+        <p className="upload-subtitle">Upload filings and interact with the insight assistant</p>
       </div>
 
       <div className="upload-main-content" style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
@@ -33,9 +33,9 @@ function AnalysisAgent() {
             type="button"
             className="validate-button"
             style={{ marginTop: '16px' }}
-            onClick={() => window.alert('Prototype: analysis run is not connected.')}
+            onClick={() => window.alert('Prototype: insight run is not connected.')}
           >
-            Run Analysis
+            Run Insight
           </button>
         </div>
 
@@ -59,7 +59,7 @@ function AnalysisAgent() {
               type="text"
               value={questionInput}
               onChange={(e) => setQuestionInput(e.target.value)}
-              placeholder="Ask about your analysis..."
+              placeholder="Ask about your insights..."
               className="chat-input"
             />
             <button type="submit" className="chat-send-button">Send</button>
@@ -70,4 +70,4 @@ function AnalysisAgent() {
   );
 }
 
-export default AnalysisAgent;
+export default InsightAgent;

@@ -17,7 +17,7 @@ import apiService from './services/api';
 import { AgentProvider } from './context/AgentContext';
 import AgentPicker from './pages/AgentPicker';
 import AnalyzerDashboard from './pages/analyzer/AnalyzerDashboard';
-import AnalysisAgent from './pages/analyzer/AnalysisAgent';
+import InsightAgent from './pages/analyzer/InsightAgent';
 import AnalysisHistory from './pages/analyzer/AnalysisHistory';
 import AnalyzerKnowledgeCenter from './pages/analyzer/AnalyzerKnowledgeCenter';
 
@@ -1172,11 +1172,11 @@ function App() {
           }
         />
         <Route
-          path="/analyzer/agent"
+          path="/analyzer/insight"
           element={
             isAuthenticated ? (
               <Layout onLogout={handleLogout}>
-                <AnalysisAgent />
+                <InsightAgent />
               </Layout>
             ) : (
               <Login onLogin={handleLogin} />
